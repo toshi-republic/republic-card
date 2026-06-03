@@ -2,1453 +2,699 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>REPUBLIC for hair — POS v5</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>REPUBLIC for hair — Loyalty Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --k:#0a0a0a;--w:#fafaf8;--g:#b8976a;--gl:#f4ede0;
-  --gr:#888;--grl:#e8e6e1;--grm:#ccc;--sf:#f4f2ed;
-  --red:#c0392b;--grn:#2d6a4f;--blu:#4a7fa5;--pur:#7a5fa5;
-  --rs:#e8f4fd;--rsb:#4a7fa5;
-  --ri:#fff8e1;--rib:#f0a500;
-  --rd:#f0fff4;--rdb:#2d6a4f;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--sf);color:var(--k);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
-input,select,textarea,button{font-family:'Noto Sans JP',sans-serif;}
+  :root {
+    --cream: #F4EFE7;
+    --warm-white: #FAF8F4;
+    --card-bg: #FDFBF8;
+    --charcoal: #1A1A18;
+    --mid: #6A6560;
+    --light: #7A7570;
+    --accent: #B89278;
+    --accent-light: #CEB09A;
+    --gold: #C2A278;
+    --gold-light: #DBC49E;
+    --border: rgba(26,26,24,0.10);
+    --border-strong: rgba(26,26,24,0.18);
+  }
 
-/* HEADER */
-header{background:var(--k);color:var(--w);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:.12em;font-weight:300;color:var(--w);}
-.logo-sub{font-size:9px;color:var(--g);letter-spacing:.18em;display:block;font-family:'Noto Sans JP',sans-serif;margin-top:1px;}
-.hdate{font-size:10px;color:var(--gr);text-align:right;line-height:1.6;}
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-/* APP */
-.app{max-width:1040px;margin:0 auto;padding:12px;}
+  body {
+    background: var(--cream);
+    min-height: 100vh;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 64px;
+    overflow-x: hidden;
+  }
 
-/* TABS */
-.tabs{display:flex;gap:2px;margin-bottom:12px;background:var(--k);border-radius:8px;padding:3px;}
-.tab{flex:1;padding:8px 2px;text-align:center;font-size:10px;letter-spacing:.03em;border-radius:5px;cursor:pointer;color:var(--gr);transition:all .2s;border:none;background:none;}
-.tab.on{background:var(--g);color:var(--k);font-weight:500;}
-.page{display:none;}.page.on{display:block;}
+  /* Grain */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0; opacity:0.7;
+  }
 
-/* CARD */
-.card{background:var(--w);border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:12px;}
-.ctitle{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.1em;color:var(--g);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--grl);font-weight:400;}
+  /* ── HEADER ── */
+  .header {
+    width:100%; max-width:400px;
+    padding: 44px 24px 20px;
+    text-align:center;
+    position:relative; z-index:1;
+  }
 
-/* FORM */
-.fi{width:100%;padding:9px 12px;border:1px solid var(--grm);border-radius:6px;font-size:13px;outline:none;background:var(--w);transition:border-color .15s;margin-bottom:7px;}
-.fi:focus{border-color:var(--g);}
-textarea.fi{resize:vertical;min-height:60px;}
+  /* SVG Logo */
+  .logo-svg {
+    display:block;
+    margin: 0 auto 12px;
+    width: 180px;
+  }
 
-/* BUTTONS */
-.btn{padding:10px;border:none;border-radius:6px;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500;}
-.btn-k{background:var(--k);color:var(--w);}
-.btn-k:hover{background:#222;}
-.btn-k:disabled{background:var(--grm);cursor:not-allowed;}
-.btn-g{background:var(--g);color:var(--w);border:none;}
-.btn-o{background:transparent;color:var(--gr);border:1px solid var(--grm);}
-.btn-o:hover{border-color:var(--red);color:var(--red);}
-.btn-full{width:100%;margin-bottom:6px;}
-.bk{padding:2px 6px;font-size:9px;border-radius:3px;border:1px solid;cursor:pointer;background:transparent;white-space:nowrap;}
-.bk-s{border-color:var(--rib);color:var(--rib);}
-.bk-c{border-color:var(--grn);color:var(--grn);}
-.bk-e{border-color:var(--gr);color:var(--gr);}
-.bk-d{border-color:var(--red);color:var(--red);}
-.bk-p{border-color:var(--g);color:var(--g);}
+  .header-rule-v {
+    width:1px; height:24px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    margin: 0 auto 14px;
+  }
 
-/* ── TIMELINE ── */
-.res-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
-.nav-row{display:flex;align-items:center;gap:8px;}
-.nav-btn{background:var(--k);border:none;color:var(--w);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;}
-.date-lbl{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.05em;}
-.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
-.leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gr);}
-.legdot{width:9px;height:9px;border-radius:2px;}
-.tl-wrap{overflow-x:auto;}
-.tl-hdr{display:grid;grid-template-columns:52px 1fr 1fr;gap:3px;margin-bottom:3px;}
-.tl-head{padding:6px 8px;border-radius:5px;text-align:center;font-size:11px;font-weight:500;color:white;}
+  .header-tagline {
+    font-size: 8px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--light);
+    font-weight: 300;
+    text-align: center;
+  }
 
-/* ── POS ── */
-.pos-grid{display:grid;grid-template-columns:1fr 320px;gap:12px;}
-@media(max-width:700px){.pos-grid{grid-template-columns:1fr;}}
-.sty-row{display:flex;gap:6px;}
-.sty-btn{flex:1;padding:9px 6px;font-size:13px;border:1px solid var(--grm);border-radius:6px;background:transparent;cursor:pointer;color:var(--k);font-weight:500;transition:all .15s;}
-.sty-btn.on{background:var(--g);border-color:var(--g);color:var(--w);}
-.sug-wrap{position:relative;}
-.sug-list{position:absolute;top:100%;left:0;right:0;background:var(--w);border:1px solid var(--grm);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:50;max-height:140px;overflow-y:auto;display:none;}
-.sug-item{padding:7px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--grl);}
-.sug-item:hover{background:var(--sf);}
-.from-banner{background:linear-gradient(135deg,#e8f4fd,#f0f7ff);border:1px solid var(--blu);border-radius:8px;padding:9px 13px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.from-txt{font-size:11px;color:var(--blu);font-weight:500;}
-.cat-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px;}
-.cat-btn{padding:4px 10px;font-size:11px;border:1px solid var(--grm);border-radius:14px;background:transparent;cursor:pointer;color:var(--gr);transition:all .15s;}
-.cat-btn.on{background:var(--k);border-color:var(--k);color:var(--w);}
-.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:5px;}
-.mi{border:1px solid var(--grl);border-radius:7px;padding:8px 6px;cursor:pointer;text-align:center;background:var(--sf);transition:all .15s;}
-.mi:hover{border-color:var(--g);background:#fdf9f4;}
-.mi:active{transform:scale(.97);}
-.mi-name{font-size:11px;font-weight:500;margin-bottom:2px;line-height:1.3;}
-.mi-price{font-size:12px;color:var(--g);font-family:'Cormorant Garamond',serif;font-weight:600;}
-.mi-dur{font-size:9px;color:var(--gr);margin-top:1px;}
-.order-list{min-height:80px;margin-bottom:10px;}
-.empty{text-align:center;color:var(--gr);font-size:12px;padding:20px 0;}
-.oi{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--grl);font-size:12px;gap:4px;}
-.oi-name{flex:1;}
-.oi-price{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:600;color:var(--g);white-space:nowrap;}
-.rm-btn{background:none;border:none;color:var(--gr);cursor:pointer;font-size:14px;}
-.rm-btn:hover{color:var(--red);}
-.total-area{border-top:2px solid var(--k);padding-top:9px;margin-bottom:10px;}
-.total-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--gr);}
-.total-main{font-size:18px;color:var(--k);font-family:'Cormorant Garamond',serif;font-weight:600;margin-bottom:2px;}
-.dur-row{color:var(--g);font-size:11px;}
-.pay-row{display:flex;gap:4px;margin-bottom:9px;flex-wrap:wrap;}
-.pay-btn{flex:1;min-width:58px;padding:6px 3px;font-size:11px;border:1px solid var(--grm);border-radius:5px;background:transparent;cursor:pointer;color:var(--k);}
-.pay-btn.on{background:var(--k);border-color:var(--k);color:var(--w);}
-.cash-wrap{display:flex;align-items:center;border:1px solid var(--grm);border-radius:7px;overflow:hidden;background:var(--w);}
-.cash-pfx{padding:8px 9px;background:var(--sf);font-size:13px;color:var(--gr);border-right:1px solid var(--grm);}
-.cash-in{flex:1;padding:8px 9px;border:none;font-size:16px;font-family:'Cormorant Garamond',serif;font-weight:600;outline:none;background:transparent;color:var(--k);}
-.qc-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
-.qc-btn{padding:3px 7px;font-size:10px;border:1px solid var(--grm);border-radius:4px;background:var(--sf);cursor:pointer;}
-.qc-btn:hover{background:var(--grl);}
-.change-box{background:var(--k);border-radius:7px;padding:9px 13px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;}
-.change-lbl{color:var(--gr);font-size:11px;}
-.change-val{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--g);}
-.change-val.neg{color:var(--red);}
+  .header-divider {
+    display:flex; align-items:center; gap:10px;
+    margin: 16px auto 0; width:200px;
+  }
+  .hd-line { flex:1; height:1px; background:var(--border); }
+  .hd-diamond {
+    width:5px; height:5px;
+    background:var(--accent); transform:rotate(45deg); flex-shrink:0;
+  }
 
-/* CARTE */
-.carte-sb{display:flex;gap:7px;margin-bottom:12px;}
-.carte-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--grl);cursor:pointer;}
-.carte-row:hover{background:var(--sf);}
-.cr-name{font-size:13px;font-weight:500;}
-.cr-sub{font-size:10px;color:var(--gr);margin-top:2px;}
-.cr-right{font-size:10px;color:var(--g);text-align:right;}
-.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.ci-box{background:var(--sf);border-radius:7px;padding:10px;}
-.ci-lbl{font-size:10px;color:var(--gr);margin-bottom:3px;}
-.ci-val{font-size:13px;font-weight:500;}
-.rec-block{background:var(--sf);border-radius:7px;padding:10px;margin-bottom:8px;font-size:12px;line-height:1.7;}
-.visit-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--grl);font-size:12px;}
-.vs-menus{color:var(--gr);font-size:10px;}
-.vs-amt{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;}
+  /* ── CARD ── */
+  .card-wrap {
+    width: calc(100% - 32px);
+    max-width: 390px;
+    margin: 20px auto 0;
+    position:relative; z-index:1;
+  }
 
-/* HISTORY */
-.day-sum{background:var(--k);color:var(--w);border-radius:8px;padding:13px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.ds-box{text-align:center;}
-.ds-lbl{font-size:9px;color:var(--gr);letter-spacing:.06em;margin-bottom:3px;}
-.ds-val{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--g);}
-.filter-sel{padding:6px 9px;border:1px solid var(--grm);border-radius:6px;font-size:11px;background:var(--w);outline:none;}
-.sh-item{padding:9px 0;border-bottom:1px solid var(--grl);}
-.sh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
-.sh-time{font-size:10px;color:var(--gr);}
-.sh-name{font-size:12px;font-weight:500;}
-.sh-detail{font-size:10px;color:var(--gr);margin-top:1px;}
-.sh-sty{font-size:10px;color:var(--g);}
-.sh-amt{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
-.sh-pay{font-size:10px;color:var(--gr);}
-.sh-acts{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
-.hbtn{padding:3px 8px;font-size:10px;border-radius:4px;cursor:pointer;border:1px solid var(--grm);background:transparent;color:var(--gr);}
-.hbtn:hover{border-color:var(--g);color:var(--g);}
-.hbtn-line{border-color:#06c755;color:#06c755;}
-.hbtn-del{border-color:var(--red);color:var(--red);}
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 26px 24px 22px;
+    position:relative;
+    box-shadow:
+      0 1px 3px rgba(26,26,24,0.04),
+      0 4px 24px rgba(26,26,24,0.07),
+      0 12px 48px rgba(26,26,24,0.04);
+    overflow:hidden;
+  }
 
-/* MENU EDIT */
-.me-cat{margin-bottom:16px;}
-.me-ctitle{font-size:11px;color:var(--g);letter-spacing:.08em;margin-bottom:6px;}
-.me-row{display:flex;gap:4px;align-items:center;margin-bottom:5px;}
-.me-row input{padding:6px 7px;border:1px solid var(--grm);border-radius:5px;font-size:11px;outline:none;background:var(--w);}
-.me-row input:focus{border-color:var(--g);}
-.in-name{flex:2;}.in-price{flex:1;min-width:60px;}.in-dur{flex:1;min-width:55px;}
-.me-del{padding:4px 7px;background:none;border:1px solid var(--grm);border-radius:5px;font-size:10px;cursor:pointer;color:var(--gr);}
-.me-del:hover{border-color:var(--red);color:var(--red);}
+  /* Embossed corner marks */
+  .card::before, .card::after {
+    content:'';
+    position:absolute;
+    width:18px; height:18px;
+    border-color: var(--accent-light);
+    border-style:solid;
+  }
+  .card::before { top:10px; left:10px; border-width:1px 0 0 1px; }
+  .card::after  { bottom:10px; right:10px; border-width:0 1px 1px 0; }
 
-/* SETTINGS */
-.set-row{display:flex;gap:8px;align-items:center;margin-bottom:9px;}
-.set-lbl{font-size:11px;color:var(--gr);width:85px;flex-shrink:0;}
-.set-in{flex:1;padding:7px 10px;border:1px solid var(--grm);border-radius:6px;font-size:12px;outline:none;background:var(--w);}
-.set-in:focus{border-color:var(--g);}
+  /* Watermark */
+  .card-watermark {
+    position:absolute;
+    right: -4px; bottom: -10px;
+    font-family:'Jost', sans-serif;
+    font-size: 48px;
+    font-weight:200;
+    color: rgba(26,26,24,0.055);
+    line-height:1;
+    pointer-events:none;
+    user-select:none;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+  }
 
-/* MODALS */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:center;justify-content:center;padding:14px;}
-.overlay.on{display:flex;}
-.modal{background:var(--w);border-radius:12px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:92vh;overflow-y:auto;}
-.modal-hd{background:var(--k);color:var(--w);padding:13px 16px;display:flex;justify-content:space-between;align-items:center;}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--g);letter-spacing:.1em;}
-.modal-close{background:none;border:none;color:var(--gr);font-size:20px;cursor:pointer;}
-.modal-body{padding:14px;}
-.mf{margin-bottom:10px;}
-.mf label{font-size:10px;color:var(--gr);display:block;margin-bottom:3px;}
-.mf input,.mf select,.mf textarea{width:100%;padding:8px 10px;border:1px solid var(--grm);border-radius:6px;font-size:12px;outline:none;background:var(--w);}
-.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--g);}
-.mf textarea{resize:vertical;min-height:55px;}
-.modal-acts{display:flex;gap:6px;padding:11px 14px;border-top:1px solid var(--grl);}
-.modal-acts button{flex:1;padding:9px;border:none;border-radius:6px;font-size:12px;cursor:pointer;}
-.mok{background:var(--k);color:var(--w);}
-.mcancel{background:var(--grl);color:var(--k);}
+  .card-eyebrow {
+    font-size:8px;
+    letter-spacing:0.48em;
+    text-transform:uppercase;
+    color:var(--accent);
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:300;
+  }
 
-/* DELETE CONFIRM */
-.del-modal{background:var(--w);border-radius:12px;width:100%;max-width:300px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);}
-.del-hd{background:var(--k);padding:12px 16px;}
-.del-title{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--g);letter-spacing:.1em;}
-.del-body{padding:16px;}
-.del-msg{font-size:13px;line-height:1.7;color:var(--k);margin-bottom:14px;}
-.del-acts{display:flex;gap:8px;}
-.del-ok{flex:1;padding:10px;background:var(--red);color:white;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500;}
-.del-cancel{flex:1;padding:10px;background:var(--grl);color:var(--k);border:none;border-radius:6px;font-size:13px;cursor:pointer;}
+  /* ── STAMP GRID ── */
+  .stamp-grid {
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    gap:10px;
+    margin-bottom:22px;
+  }
 
-/* RECEIPT */
-.receipt-modal{background:var(--w);width:100%;max-width:320px;}
-.rc-hd{background:var(--k);padding:15px;text-align:center;}
-.rc-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.2em;color:var(--g);}
-.rc-sub{font-size:9px;letter-spacing:.12em;color:var(--gr);margin-top:2px;}
-.rc-body{padding:14px;}
-.rc-info{font-size:10px;color:var(--gr);margin-bottom:10px;text-align:center;line-height:1.8;}
-.rc-cust{font-size:12px;font-weight:500;text-align:center;margin-bottom:8px;}
-.rc-items{border-top:1px dashed var(--grm);border-bottom:1px dashed var(--grm);padding:8px 0;margin-bottom:8px;}
-.rc-item{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
-.rc-totals{margin-bottom:10px;}
-.rc-tr{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:var(--gr);}
-.rc-tr.grand{font-size:14px;color:var(--k);font-weight:500;border-top:1px solid var(--k);margin-top:4px;padding-top:6px;}
-.rc-tr.change{font-size:13px;color:var(--g);font-weight:500;}
-.rc-footer{text-align:center;font-size:9px;color:var(--gr);line-height:2;border-top:1px dashed var(--grm);padding-top:8px;}
-.rc-line{background:#f0faf0;border:1px solid #06c755;border-radius:6px;padding:9px;margin:9px 0;text-align:center;}
-.rc-line-title{font-size:10px;color:#06c755;font-weight:500;margin-bottom:6px;}
-.rc-acts{padding:11px 14px;display:flex;gap:5px;border-top:1px solid var(--grl);flex-wrap:wrap;}
-.rc-acts button{flex:1;min-width:65px;padding:8px 3px;border:none;border-radius:5px;font-size:10px;cursor:pointer;}
-.rc-print{background:var(--k);color:var(--w);}
-.rc-line-btn{background:#06c755;color:white;}
-.rc-close{background:var(--grl);color:var(--k);}
+  .sc {
+    aspect-ratio:1;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
 
-#qrArea{text-align:center;margin:8px 0;}
-#copyDone{display:none;text-align:center;font-size:11px;color:var(--grn);padding:4px;}
+  .sc-ring {
+    position:absolute; inset:1px;
+    border-radius:50%;
+    border:1px solid rgba(26,26,24,0.13);
+    transition: border-color 0.25s ease;
+  }
 
-/* HOLIDAY */
-.hday-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-.hday-btn{padding:4px 10px;font-size:11px;border:1px solid var(--grm);border-radius:14px;background:transparent;cursor:pointer;color:var(--gr);transition:all .15s;}
-.hday-btn.on{background:var(--red);border-color:var(--red);color:var(--w);}
-.hday-date-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;}
-.hday-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fde8e6;border:1px solid var(--red);border-radius:12px;font-size:10px;color:var(--red);}
-.hday-tag button{background:none;border:none;cursor:pointer;color:var(--red);font-size:12px;line-height:1;padding:0;}
-.tl-off{position:absolute;left:0;right:0;background:repeating-linear-gradient(45deg,rgba(200,200,200,.13),rgba(200,200,200,.13) 4px,transparent 4px,transparent 10px);z-index:2;pointer-events:none;border-left:3px solid #ccc;}
-@media print{body>*:not(.overlay){display:none!important;}.overlay{position:static!important;background:none!important;display:flex!important;padding:0!important;}.receipt-modal{box-shadow:none!important;max-width:100%!important;}.rc-acts,.rc-line{display:none!important;}}
+  .sc-fill {
+    position:absolute; inset:1px;
+    border-radius:50%;
+    background:var(--charcoal);
+    opacity:0;
+    transform:scale(0.35);
+    transition:
+      opacity 0.38s cubic-bezier(0.34,1.56,0.64,1),
+      transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .sc-label {
+    position:relative; z-index:2;
+    font-size:8.5px;
+    color:rgba(26,26,24,0.2);
+    font-weight:300;
+    letter-spacing:0.02em;
+    font-family:'Jost',sans-serif;
+    transition:color 0.25s, opacity 0.25s;
+  }
+
+  /* stamped */
+  .sc.on .sc-fill  { opacity:1; transform:scale(1); }
+  .sc.on .sc-ring  { border-color:transparent; }
+  .sc.on .sc-label { color:#fff; opacity:1; }
+
+  /* 日付表示スタイル */
+  .sc-label { display:flex; flex-direction:column; align-items:center; line-height:1; gap:1px; }
+  .sc-year   { font-size:6px; opacity:0.7; letter-spacing:0; }
+  .sc-month  { font-size:9px; font-weight:300; letter-spacing:-0.01em; }
+  .sc-day    { font-size:11px; font-weight:300; letter-spacing:-0.02em; }
+
+  /* 10th special */
+  .sc:last-child .sc-ring  { border-color:var(--gold); }
+  .sc:last-child .sc-label { color:var(--gold); font-size:12px; }
+  .sc:last-child.on .sc-fill { background:var(--gold); }
+  .sc:last-child.on .sc-label { color:var(--charcoal); font-size:12px; }
+
+  /* ── PROGRESS ── */
+  .prog-row {
+    display:flex; justify-content:space-between;
+    font-size:8px; letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--light); margin-bottom:8px;
+  }
+
+  .prog-track {
+    height:1px; background:var(--border);
+    position:relative; margin-bottom:22px;
+  }
+
+  .prog-fill {
+    position:absolute; left:0; top:0; bottom:0;
+    background:linear-gradient(90deg, var(--accent), var(--gold));
+    transition:width 0.65s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── CARD FOOTER ── */
+  .card-footer {
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+  }
+
+  .cf-left .big { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:300; line-height:1; letter-spacing:-0.02em; }
+  .cf-left .lbl { font-size:7.5px; letter-spacing:0.3em; text-transform:uppercase; color:var(--light); margin-top:4px; }
+
+  .cf-right { text-align:right; }
+  .cf-right .rew { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:300; color:var(--gold); line-height:1; }
+  .cf-right .lbl { font-size:7.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--light); margin-top:4px; }
+
+  /* ── INFO STRIP ── */
+  .info-strip {
+    width: calc(100% - 32px);
+    max-width:390px;
+    margin: 0 auto;
+    position:relative; z-index:1;
+    background:var(--warm-white);
+    border: 1px solid var(--border);
+    border-top:none;
+    border-radius:0 0 3px 3px;
+    padding:14px 20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 16px;
+  }
+
+  .info-item {}
+  .info-item .ii-label {
+    font-size:7px; letter-spacing:0.38em; text-transform:uppercase;
+    color:var(--light); margin-bottom:3px;
+  }
+  .info-item .ii-val {
+    font-size:10px; color:var(--mid); letter-spacing:0.04em; line-height:1.45;
+  }
+  .info-item .ii-val a { color:inherit; text-decoration:none; }
+
+  /* English tag */
+  .en-badge {
+    display:inline-block;
+    font-size:7px; letter-spacing:0.28em;
+    text-transform:uppercase;
+    border:1px solid var(--accent-light);
+    color:var(--accent);
+    padding:2px 7px;
+    border-radius:1px;
+    margin-top:4px;
+  }
+
+  /* Website link */
+  .web-link-wrap { margin-top:8px; }
+
+  .web-link {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    text-decoration:none;
+    background: var(--cream);
+    border:1px solid var(--accent-light);
+    border-radius:2px;
+    padding:5px 10px;
+    transition: background 0.2s;
+  }
+  .web-link:hover { background: var(--accent-light); }
+
+  .web-link-icon { font-size:11px; }
+
+  .web-link-text {
+    font-size:11px;
+    color:var(--accent);
+    letter-spacing:0.03em;
+    font-weight:300;
+  }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    margin-top:20px; text-align:center;
+    position:relative; z-index:1;
+  }
+
+  .btn-stamp {
+    background:var(--charcoal);
+    color:var(--cream);
+    border:none;
+    padding:15px 52px;
+    font-family:'Jost',sans-serif;
+    font-size:8.5px;
+    letter-spacing:0.42em;
+    text-transform:uppercase;
+    font-weight:300;
+    cursor:pointer;
+    border-radius:1px;
+    transition:opacity 0.2s, transform 0.1s;
+  }
+  .btn-stamp:hover   { opacity:0.88; }
+  .btn-stamp:active  { transform:scale(0.97); }
+  .btn-stamp:disabled { opacity:0.3; cursor:default; pointer-events:none; }
+
+  /* ── COUPON ── */
+  .coupon-wrap {
+    width:calc(100% - 32px); max-width:390px;
+    margin:18px auto 0;
+    position:relative; z-index:1;
+    display:none;
+  }
+  .coupon-wrap.show {
+    display:block;
+    animation:slideUp 0.5s cubic-bezier(0.34,1.5,0.64,1) forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .coupon {
+    border:1px dashed var(--gold);
+    border-radius:2px;
+    background:linear-gradient(140deg, #FBF8F3, #F6EFE5);
+    padding:28px 22px 24px;
+    text-align:center;
+    position:relative; overflow:hidden;
+  }
+
+  /* Coupon notches */
+  .coupon::before, .coupon::after {
+    content:'';
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:12px; height:12px;
+    background:var(--cream);
+    border-radius:50%;
+    border:1px solid var(--gold-light);
+  }
+  .coupon::before { left:-7px; }
+  .coupon::after  { right:-7px; }
+
+  .c-scissors { font-size:18px; display:block; margin-bottom:12px; opacity:0.7; }
+  .c-eyebrow  { font-size:8px; letter-spacing:0.45em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+
+  .c-value {
+    font-family:'Cormorant Garamond',serif;
+    font-size:58px; font-weight:300; line-height:1;
+    color:var(--charcoal); letter-spacing:-0.03em;
+    margin-bottom:6px;
+  }
+  .c-value sup { font-size:22px; vertical-align:super; color:var(--gold); }
+
+  .c-body  { font-size:8.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--mid); margin-bottom:20px; line-height:1.9; }
+
+  .btn-redeem {
+    background:var(--gold);
+    border:none; color:#fff;
+    padding:12px 38px;
+    font-family:'Jost',sans-serif;
+    font-size:8px; letter-spacing:0.4em;
+    text-transform:uppercase; font-weight:300;
+    cursor:pointer; border-radius:1px;
+    transition:opacity 0.2s;
+  }
+  .btn-redeem:hover { opacity:0.82; }
+
+  /* ── HISTORY ── */
+  .history-wrap {
+    width:calc(100% - 32px); max-width:390px;
+    margin:28px auto 0;
+    position:relative; z-index:1;
+  }
+
+  .sec-label {
+    font-size:8px; letter-spacing:0.42em;
+    text-transform:uppercase; color:var(--light);
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:2px;
+  }
+
+  .h-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:11px 0;
+    border-bottom:1px solid rgba(26,26,24,0.04);
+    font-size:11px;
+  }
+  .h-round {
+    font-family:'Cormorant Garamond',serif;
+    font-size:13px; color:var(--charcoal);
+  }
+  .h-status {
+    font-size:8px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .h-status.used { color:var(--light); }
+
+  /* ── PAGE FOOTER ── */
+  .page-foot {
+    margin-top:40px; text-align:center;
+    position:relative; z-index:1;
+  }
+
+  .reset-btn {
+    font-size:8px; letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:rgba(26,26,24,0.25);
+    background:none; border:none;
+    cursor:pointer; font-family:'Jost',sans-serif;
+    font-weight:200;
+    transition:color 0.2s;
+  }
+  .reset-btn:hover { color:rgba(26,26,24,0.5); }
+
+  /* ── PARTICLES ── */
+  .particle {
+    position:fixed; pointer-events:none; z-index:9999; border-radius:50%;
+  }
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">REPUBLIC<span class="logo-sub">for hair — POS v5</span></div>
-  <div class="hdate" id="hdate"></div>
-</header>
 
-<div class="app">
-  <div class="tabs">
-    <button class="tab on" onclick="go('res')">📅 予約</button>
-    <button class="tab" onclick="go('pos')">💴 レジ</button>
-    <button class="tab" onclick="go('carte')">📋 カルテ</button>
-    <button class="tab" onclick="go('hist')">📊 売上</button>
-    <button class="tab" onclick="go('menu')">メニュー</button>
-    <button class="tab" onclick="go('set')">設定</button>
+<!-- HEADER -->
+<div class="header">
+  <!-- SVG Logo: REPUBLIC ® / for hair -->
+  <svg class="logo-svg" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- REPUBLIC -->
+    <text x="110" y="26"
+      font-family="'Cormorant Garamond', Georgia, serif"
+      font-size="26" font-weight="300"
+      letter-spacing="8"
+      fill="#1A1A18"
+      text-anchor="middle"
+      dominant-baseline="auto">REPUBLIC</text>
+    <!-- registered mark -->
+    <text x="202" y="14"
+      font-family="'Jost', sans-serif"
+      font-size="9" font-weight="300"
+      fill="#B89278"
+      text-anchor="middle">®</text>
+    <!-- divider line -->
+    <line x1="40" y1="35" x2="180" y2="35" stroke="#C2A278" stroke-width="0.6" opacity="0.5"/>
+    <!-- for hair -->
+    <text x="110" y="52"
+      font-family="'Cormorant Garamond', Georgia, serif"
+      font-size="13" font-weight="300"
+      font-style="italic"
+      letter-spacing="5"
+      fill="#B89278"
+      text-anchor="middle">for hair</text>
+  </svg>
+
+  <div class="header-rule-v"></div>
+  <div class="header-tagline">Loyalty Card</div>
+  <div class="header-divider">
+    <div class="hd-line"></div>
+    <div class="hd-diamond"></div>
+    <div class="hd-line"></div>
   </div>
+</div>
 
-  <!-- ── 予約 ── -->
-  <div class="page on" id="pg-res">
-    <div class="card">
-      <div class="res-hd">
-        <div class="nav-row">
-          <button class="nav-btn" onclick="mvDate(-1)">‹</button>
-          <div class="date-lbl" id="dateLbl"></div>
-          <button class="nav-btn" onclick="mvDate(1)">›</button>
-          <button class="nav-btn" onclick="today()" style="font-size:9px;width:auto;padding:0 8px;border-radius:12px">今日</button>
-        </div>
-        <button class="btn btn-g" onclick="openResModal()">＋ 予約追加</button>
-      </div>
-      <div class="legend">
-        <div class="leg"><div class="legdot" style="background:var(--rsb)"></div>予約済</div>
-        <div class="leg"><div class="legdot" style="background:var(--rib)"></div>施術中</div>
-        <div class="leg"><div class="legdot" style="background:var(--rdb)"></div>完了</div>
-        <div class="leg"><div class="legdot" style="background:var(--grm)"></div>会計済</div>
-      </div>
-      <div class="tl-wrap">
-        <div style="min-width:480px">
-          <div class="tl-hdr">
-            <div></div>
-            <div class="tl-head" id="th0" style="background:var(--blu)"></div>
-            <div class="tl-head" id="th1" style="background:var(--pur)"></div>
-          </div>
-          <div id="tlBody"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- CARD -->
+<div class="card-wrap">
+  <div class="card">
+    <div class="card-watermark">REPUBLIC</div>
+    <div class="card-eyebrow">Stamp Card</div>
 
-  <!-- ── レジ ── -->
-  <div class="page" id="pg-pos">
-    <div class="pos-grid">
-      <div>
-        <div id="fromBanner" style="display:none;margin-bottom:10px">
-          <div class="from-banner">
-            <div class="from-txt" id="fromTxt"></div>
-            <button style="background:none;border:none;color:var(--gr);cursor:pointer;font-size:12px" onclick="clearFrom()">× 解除</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="ctitle">担当スタイリスト</div>
-          <div class="sty-row" id="styRow"></div>
-        </div>
-        <div class="card">
-          <div class="ctitle">顧客情報</div>
-          <div class="sug-wrap">
-            <input class="fi" id="custName" type="text" placeholder="お客様のお名前" autocomplete="off" oninput="doSug()">
-            <div class="sug-list" id="sugList"></div>
-          </div>
-          <input class="fi" id="custPhone" type="tel" placeholder="電話番号（任意）">
-          <input class="fi" id="custEmail" type="email" placeholder="メールアドレス（任意）" style="margin-bottom:0">
-        </div>
-        <div class="card">
-          <div class="ctitle">メニュー選択</div>
-          <div class="cat-row" id="catRow"></div>
-          <div class="menu-grid" id="menuGrid"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card">
-          <div class="ctitle">会計</div>
-          <div class="order-list" id="orderList"><div class="empty">メニューを選択してください</div></div>
-          <div class="total-area">
-            <div class="total-row total-main" style="align-items:center">
-              <span>合計</span>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span id="totalAmt" style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600">¥0</span>
-                <button onclick="togEdit()" id="editBtn" style="font-size:9px;padding:2px 7px;border:1px solid var(--g);border-radius:4px;background:transparent;color:var(--g);cursor:pointer">変更</button>
-              </div>
-            </div>
-            <div id="editArea" style="display:none;margin:6px 0 8px">
-              <div style="font-size:10px;color:var(--gr);margin-bottom:4px">合計金額を直接入力</div>
-              <div style="display:flex;align-items:center;border:1px solid var(--g);border-radius:7px;overflow:hidden;background:var(--w)">
-                <span style="padding:8px 9px;background:var(--sf);font-size:13px;color:var(--gr);border-right:1px solid var(--grm)">¥</span>
-                <input type="number" id="manIn" style="flex:1;padding:8px 9px;border:none;font-size:16px;font-family:'Cormorant Garamond',serif;font-weight:600;outline:none;background:transparent" inputmode="numeric" oninput="applyMan()">
-              </div>
-              <div style="display:flex;gap:5px;margin-top:5px">
-                <button onclick="disc(10)" style="flex:1;padding:4px;font-size:10px;border:1px solid var(--grm);border-radius:4px;background:var(--sf);cursor:pointer">10%OFF</button>
-                <button onclick="disc(20)" style="flex:1;padding:4px;font-size:10px;border:1px solid var(--grm);border-radius:4px;background:var(--sf);cursor:pointer">20%OFF</button>
-                <button onclick="resetMan()" style="flex:1;padding:4px;font-size:10px;border:1px solid var(--grm);border-radius:4px;background:var(--sf);cursor:pointer;color:var(--gr)">元に戻す</button>
-              </div>
-            </div>
-            <div class="total-row"><span>内消費税(10%)</span><span id="taxAmt">¥0</span></div>
-            <div class="total-row dur-row"><span>⏱ 予想施術時間</span><span id="durAmt">—</span></div>
-          </div>
-          <div style="margin-bottom:8px">
-            <div style="font-size:11px;color:var(--gr);margin-bottom:4px">お支払い方法</div>
-            <div class="pay-row">
-              <button class="pay-btn on" onclick="setPay(this,'現金')">現金</button>
-              <button class="pay-btn" onclick="setPay(this,'カード')">カード</button>
-              <button class="pay-btn" onclick="setPay(this,'PayPay')">PayPay</button>
-              <button class="pay-btn" onclick="setPay(this,'その他')">その他</button>
-            </div>
-          </div>
-          <div id="cashArea" style="margin-bottom:9px">
-            <div style="font-size:11px;color:var(--gr);margin-bottom:4px">お預かり金額</div>
-            <div class="cash-wrap">
-              <div class="cash-pfx">¥</div>
-              <input class="cash-in" type="number" id="cashIn" placeholder="0" oninput="calcChange();updBtn()" inputmode="numeric">
-            </div>
-            <div class="qc-row" id="qcRow"></div>
-          </div>
-          <div class="change-box">
-            <div class="change-lbl">お釣り</div>
-            <div class="change-val" id="changeVal">—</div>
-          </div>
-          <button class="btn btn-k btn-full" id="compBtn" onclick="completeSale()" disabled>会計を確定する</button>
-          <button class="btn btn-o btn-full" onclick="clearOrder()">クリア</button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="stamp-grid" id="stampGrid"></div>
 
-  <!-- ── カルテ ── -->
-  <div class="page" id="pg-carte">
-    <div id="carteList">
-      <div class="card">
-        <div class="ctitle">顧客カルテ</div>
-        <div class="carte-sb">
-          <input type="text" class="fi" id="carteQ" placeholder="お名前・電話番号で検索" oninput="renderCartes()" style="margin:0;flex:1">
-          <button class="btn btn-g" onclick="openNewCarte()">＋ 新規</button>
-        </div>
-        <div id="carteRows"></div>
-      </div>
+    <div class="prog-row">
+      <span>Progress</span>
+      <span id="progText">0 / 10</span>
     </div>
-    <div id="carteDetail" style="display:none">
-      <button class="btn btn-o" onclick="closeDetail()" style="margin-bottom:12px">← 一覧へ戻る</button>
-      <div id="detailContent"></div>
+    <div class="prog-track">
+      <div class="prog-fill" id="progFill" style="width:0%"></div>
     </div>
-  </div>
 
-  <!-- ── 売上 ── -->
-  <div class="page" id="pg-hist">
-    <div class="day-sum">
-      <div class="ds-box"><div class="ds-lbl">本日売上</div><div class="ds-val" id="dsSales">¥0</div></div>
-      <div class="ds-box"><div class="ds-lbl">件数</div><div class="ds-val" id="dsCnt">0件</div></div>
-      <div class="ds-box"><div class="ds-lbl">客単価</div><div class="ds-val" id="dsAvg">—</div></div>
-    </div>
-    <div class="card">
-      <div class="ctitle">売上履歴</div>
-      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-        <select class="filter-sel" id="fSty" onchange="renderHist()"><option value="">全スタイリスト</option></select>
-        <input type="date" class="filter-sel" id="fDate" onchange="renderHist()">
-        <button class="hbtn" onclick="document.getElementById('fDate').value='';renderHist()" style="border-color:var(--g);color:var(--g)">全期間</button>
+    <div class="card-footer">
+      <div class="cf-left">
+        <div class="big" id="visitNum">0</div>
+        <div class="lbl">Total Visits</div>
       </div>
-      <div id="histRows"><div class="empty">まだ取引がありません</div></div>
-    </div>
-  </div>
-
-  <!-- ── メニュー ── -->
-  <div class="page" id="pg-menu">
-    <div class="card">
-      <div class="ctitle">メニュー・料金・施術時間 編集</div>
-      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 40px;gap:4px;margin-bottom:6px;font-size:10px;color:var(--gr);padding:0 2px">
-        <span>メニュー名</span><span>金額</span><span>時間(分)</span><span></span>
+      <div class="cf-right">
+        <div class="rew">10% Off</div>
+        <div class="lbl">10回来店ごと</div>
       </div>
-      <div id="menuEdit"></div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--grl)">
-        <div style="font-size:12px;margin-bottom:7px">新しいメニューを追加</div>
-        <div class="me-row" style="flex-wrap:wrap">
-          <select id="newCat" class="fi" style="margin:0;flex:1;min-width:80px">
-            <option>カット</option><option>カラー</option><option>パーマ</option>
-            <option>トリートメント</option><option>物販</option><option>その他</option>
-          </select>
-          <input class="in-name" type="text" id="newName" placeholder="メニュー名" style="padding:6px 7px;border:1px solid var(--grm);border-radius:5px;font-size:11px;outline:none">
-          <input class="in-price" type="number" id="newPrice" placeholder="金額" style="padding:6px 7px;border:1px solid var(--grm);border-radius:5px;font-size:11px;outline:none">
-          <input class="in-dur" type="number" id="newDur" placeholder="分" style="padding:6px 7px;border:1px solid var(--grm);border-radius:5px;font-size:11px;outline:none">
-          <button class="btn btn-g" onclick="addMenu()">追加</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── 設定 ── -->
-  <div class="page" id="pg-set">
-    <div class="card">
-      <div class="ctitle">スタイリスト名設定</div>
-      <div class="set-row"><div class="set-lbl">スタイリスト1</div><input class="set-in" id="s1" type="text"></div>
-      <div class="set-row"><div class="set-lbl">スタイリスト2</div><input class="set-in" id="s2" type="text"></div>
-      <button class="btn btn-g" onclick="saveSty()">保存する</button>
-    </div>
-    <div class="card">
-      <div class="ctitle">サロン情報</div>
-      <div class="set-row"><div class="set-lbl">店名</div><input class="set-in" id="sName" type="text"></div>
-      <div class="set-row"><div class="set-lbl">住所</div><input class="set-in" id="sAddr" type="text"></div>
-      <div class="set-row"><div class="set-lbl">電話</div><input class="set-in" id="sTel" type="text"></div>
-      <div class="set-row"><div class="set-lbl">LINE URL</div><input class="set-in" id="sLine" type="text"></div>
-      <button class="btn btn-g" onclick="saveSalon()">保存する</button>
-    </div>
-    <div class="card">
-      <div class="ctitle">休日・定休日設定</div>
-      <div style="font-size:11px;color:var(--gr);margin-bottom:10px">定休日として設定した曜日は、タイムラインで予約不可（グレー表示）になります。</div>
-      <div style="font-size:11px;margin-bottom:6px;font-weight:500">スタイリスト1（<span id="hdSty1Name"></span>）の定休曜日</div>
-      <div class="hday-wrap" id="hdWeek0"></div>
-      <div style="font-size:11px;margin:10px 0 6px;font-weight:500">スタイリスト2（<span id="hdSty2Name"></span>）の定休曜日</div>
-      <div class="hday-wrap" id="hdWeek1"></div>
-      <div style="border-top:1px solid var(--grl);margin:12px 0 10px"></div>
-      <div style="font-size:11px;margin-bottom:6px;font-weight:500">臨時休業日（特定日を指定）</div>
-      <div style="font-size:10px;color:var(--gr);margin-bottom:8px">特定の日付をスタイリストごとに休業日に設定できます。</div>
-      <div class="hday-date-row">
-        <select id="hdDateSty" class="filter-sel">
-          <option value="0" id="hdOpt0"></option>
-          <option value="1" id="hdOpt1"></option>
-          <option value="2">両方</option>
-        </select>
-        <input type="date" id="hdDateIn" class="filter-sel">
-        <button class="btn btn-g" onclick="addHoliday()" style="padding:6px 12px;font-size:11px">追加</button>
-      </div>
-      <div id="hdDateList" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
-    </div>
-    <div class="card">
-      <div class="ctitle">データ管理・バックアップ</div>
-      <div style="font-size:11px;color:var(--gr);margin-bottom:10px;line-height:1.7">週1回「一括バックアップ」をGoogleドライブに保存してください。</div>
-      <button class="btn btn-g btn-full" onclick="exportAll()">📦 一括バックアップ（全データ）</button>
-      <button class="btn btn-o btn-full" onclick="exportCSV()">📊 売上CSVを書き出す</button>
-      <button class="btn btn-o btn-full" onclick="exportCarteCSV()">📋 カルテCSVを書き出す</button>
-      <button class="btn btn-o btn-full" onclick="exportResCSV()">📅 予約CSVを書き出す</button>
-      <button class="btn btn-o btn-full" onclick="document.getElementById('importFile').click()">📥 バックアップから復元する</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="doImport(event)">
-      <div style="border-top:1px solid var(--grl);margin:10px 0"></div>
-      <button class="btn btn-o btn-full" style="color:var(--red);border-color:var(--red)" onclick="askDel('売上データを全て削除しますか？',function(){sales=[];sv('r5_s',sales);renderHist();})">売上データを初期化</button>
     </div>
   </div>
 </div>
 
-<!-- ── 予約モーダル ── -->
-<div class="overlay" id="resOv">
-  <div class="modal">
-    <div class="modal-hd"><div class="modal-title" id="resMT">予約を追加</div><button class="modal-close" onclick="closeOv('resOv')">×</button></div>
-    <div class="modal-body">
-      <div class="mf"><label>お客様名 *</label><input type="text" id="rName" placeholder="山田 花子"></div>
-      <div class="mf"><label>電話番号</label><input type="tel" id="rPhone"></div>
-      <div class="mf"><label>担当スタイリスト *</label><select id="rSty"></select></div>
-      <div class="mf"><label>日付 *</label><input type="date" id="rDate"></div>
-      <div class="mf"><label>開始時間 *</label>
-        <select id="rTime">
-          <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
-          <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
-          <option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option>
-          <option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option>
-          <option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option>
-        </select>
-      </div>
-      <div class="mf"><label>施術時間（分）</label>
-        <select id="rDur"><option value="30">30分</option><option value="60" selected>60分</option><option value="90">90分</option><option value="120">120分</option><option value="150">150分</option><option value="180">180分</option><option value="210">210分</option><option value="240">240分</option></select>
-      </div>
-      <div class="mf"><label>メニュー（予定）</label><input type="text" id="rMenu" placeholder="カット＋カラー"></div>
-      <div class="mf"><label>料金（税込）<span style="font-size:9px;color:var(--gr)"> ※レジに自動入力されます</span></label>
-        <div style="display:flex;align-items:center;border:1px solid var(--grm);border-radius:6px;overflow:hidden;background:var(--w)">
-          <span style="padding:8px 10px;background:var(--sf);font-size:12px;color:var(--gr);border-right:1px solid var(--grm)">¥</span>
-          <input type="number" id="rPrice" placeholder="0" style="flex:1;padding:8px 10px;border:none;font-size:14px;font-family:'Cormorant Garamond',serif;font-weight:600;outline:none;background:transparent">
-        </div>
-      </div>
-      <div class="mf"><label>メモ・アレルギー等</label><textarea id="rMemo"></textarea></div>
-    </div>
-    <div class="modal-acts">
-      <button class="mok" onclick="saveRes()">保存する</button>
-      <button class="mcancel" onclick="closeOv('resOv')">キャンセル</button>
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-item">
+    <div class="ii-label">Hours</div>
+    <div class="ii-val">10:00 – 20:00<br>Closed every other Tue</div>
+    <div class="ii-label" style="margin-top:8px;">Address</div>
+    <div class="ii-val">1F 2-12-10 Minamicho<br>Kichijoji, Tokyo 180-0003</div>
+  </div>
+  <div class="info-item">
+    <div class="ii-label">Tel</div>
+    <div class="ii-val"><a href="tel:0422249195">0422-24-9195</a></div>
+    <div class="en-badge">English OK</div>
+    <div class="web-link-wrap">
+      <a href="https://www.republichair.com" target="_blank" class="web-link">
+        <span class="web-link-icon">🌐</span>
+        <span class="web-link-text">www.republichair.com</span>
+      </a>
     </div>
   </div>
 </div>
 
-<!-- ── カルテモーダル ── -->
-<div class="overlay" id="carteOv">
-  <div class="modal">
-    <div class="modal-hd"><div class="modal-title" id="carteMT">カルテを新規作成</div><button class="modal-close" onclick="closeOv('carteOv')">×</button></div>
-    <div class="modal-body">
-      <div class="mf"><label>お名前 *</label><input type="text" id="cName"></div>
-      <div class="mf"><label>電話番号</label><input type="tel" id="cPhone"></div>
-      <div class="mf"><label>メールアドレス</label><input type="email" id="cEmail"></div>
-      <div class="mf"><label>アレルギー・禁忌</label><input type="text" id="cAllergy" placeholder="なし"></div>
-      <div class="mf"><label>担当者メモ</label><textarea id="cMemo"></textarea></div>
-      <div class="mf"><label>カラーレシピ（最新）</label><textarea id="cRecipe" placeholder="8LB+8WB 1:1 OX6% 30min"></textarea></div>
-    </div>
-    <div class="modal-acts">
-      <button class="mok" onclick="saveCarte()">保存する</button>
-      <button class="mcancel" onclick="closeOv('carteOv')">キャンセル</button>
-    </div>
+<!-- ADD STAMP BUTTON -->
+<div class="btn-wrap">
+  <button class="btn-stamp" id="btnStamp" onclick="addStamp()">Add Visit</button>
+</div>
+
+<!-- COUPON -->
+<div class="coupon-wrap" id="couponWrap">
+  <div class="coupon">
+    <span class="c-scissors">✂</span>
+    <div class="c-eyebrow">Congratulations</div>
+    <div class="c-value"><sup>−</sup>10%</div>
+    <div class="c-body">Next Visit Discount<br>施術合計金額より割引</div>
+    <button class="btn-redeem" onclick="redeemCoupon()">Use Discount</button>
   </div>
 </div>
 
-<!-- ── レシピモーダル ── -->
-<div class="overlay" id="recipeOv">
-  <div class="modal">
-    <div class="modal-hd"><div class="modal-title">レシピ・施術メモを追加</div><button class="modal-close" onclick="closeOv('recipeOv')">×</button></div>
-    <div class="modal-body">
-      <div class="mf"><label>施術日</label><input type="date" id="rpDate"></div>
-      <div class="mf"><label>カラーレシピ</label><textarea id="rpRecipe"></textarea></div>
-      <div class="mf"><label>施術メモ</label><textarea id="rpMemo"></textarea></div>
-    </div>
-    <div class="modal-acts">
-      <button class="mok" onclick="saveRecipe()">保存する</button>
-      <button class="mcancel" onclick="closeOv('recipeOv')">キャンセル</button>
-    </div>
-  </div>
+<!-- HISTORY -->
+<div class="history-wrap" id="histWrap" style="display:none">
+  <div class="sec-label">Visit History</div>
+  <div id="histList"></div>
 </div>
 
-<!-- ── 売上修正モーダル ── -->
-<div class="overlay" id="editSaleOv">
-  <div class="modal">
-    <div class="modal-hd"><div class="modal-title">売上を修正</div><button class="modal-close" onclick="closeOv('editSaleOv')">×</button></div>
-    <div class="modal-body">
-      <div class="mf"><label>お客様名</label><input type="text" id="eCust"></div>
-      <div class="mf"><label>担当スタイリスト</label><select id="eSty"></select></div>
-      <div class="mf"><label>合計金額（税込）</label><input type="number" id="eTotal"></div>
-      <div class="mf"><label>お支払い方法</label><select id="ePay"><option>現金</option><option>カード</option><option>PayPay</option><option>その他</option></select></div>
-      <div class="mf"><label>メモ</label><input type="text" id="eMemo"></div>
-    </div>
-    <div class="modal-acts">
-      <button class="mok" onclick="saveEditSale()">保存する</button>
-      <button class="mcancel" onclick="closeOv('editSaleOv')">キャンセル</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── レシートモーダル ── -->
-<div class="overlay" id="rcOv">
-  <div class="modal receipt-modal">
-    <div class="rc-hd"><div class="rc-logo">REPUBLIC</div><div class="rc-sub">for hair — Kichijoji</div></div>
-    <div class="rc-body">
-      <div class="rc-info" id="rcInfo"></div>
-      <div class="rc-cust" id="rcCust"></div>
-      <div class="rc-items" id="rcItems"></div>
-      <div class="rc-totals" id="rcTotals"></div>
-      <div class="rc-line" id="rcLine">
-        <div class="rc-line-title">📱 電子レシートをお受け取りください</div>
-        <div style="display:flex;gap:6px;justify-content:center;margin-top:6px;flex-wrap:wrap">
-          <button onclick="showQR()" style="flex:1;padding:6px 4px;background:#06c755;border:none;border-radius:5px;color:white;font-size:11px;cursor:pointer">QRコード</button>
-          <button onclick="shareViaLine()" style="flex:1;padding:6px 4px;background:#06c755;border:none;border-radius:5px;color:white;font-size:11px;cursor:pointer;opacity:.85">LINEで送る</button>
-          <button onclick="copyRc()" style="flex:1;padding:6px 4px;background:var(--sf);border:1px solid var(--grm);border-radius:5px;font-size:11px;cursor:pointer">コピー</button>
-        </div>
-        <div id="qrArea" style="display:none;margin-top:8px;text-align:center"></div>
-        <div id="copyDone">✓ コピーしました！</div>
-      </div>
-      <div class="rc-footer" id="rcFooter"></div>
-    </div>
-    <div class="rc-acts">
-      <button class="rc-print" onclick="window.print()">🖨 印刷</button>
-      <button class="rc-close" onclick="closeOv('rcOv');clearOrder()">閉じる</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── 削除確認モーダル ── -->
-<div class="overlay" id="delOv">
-  <div class="del-modal">
-    <div class="del-hd"><div class="del-title">確認</div></div>
-    <div class="del-body">
-      <div class="del-msg" id="delMsg"></div>
-      <div class="del-acts">
-        <button class="del-ok" id="delOK">削除する</button>
-        <button class="del-cancel" onclick="closeOv('delOv')">キャンセル</button>
-      </div>
-    </div>
-  </div>
+<!-- PAGE FOOTER -->
+<div class="page-foot">
+  <button class="reset-btn" onclick="doReset()">Reset Card</button>
 </div>
 
 <script>
-// ━━━ STORAGE ━━━
-const sv=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const ld=k=>JSON.parse(localStorage.getItem(k)||'null');
+const TOTAL = 10;
+let S = { stamps:0, total:0, coupon:false, hist:[], dates:[] };
 
-// ━━━ STATE ━━━
-let menus=ld('r5_m')||[
-  {cat:'カット',name:'カット',price:8800,dur:60},
-  {cat:'カット',name:'カット（学生）',price:7700,dur:60},
-  {cat:'カラー',name:'ルーツカラー',price:9900,dur:90},
-  {cat:'カラー',name:'全体カラー',price:13200,dur:120},
-  {cat:'カラー',name:'イルミナカラー',price:15400,dur:120},
-  {cat:'カラー',name:'ハイライト',price:16500,dur:150},
-  {cat:'パーマ',name:'デジタルパーマ',price:19800,dur:180},
-  {cat:'パーマ',name:'コールドパーマ',price:14300,dur:120},
-  {cat:'トリートメント',name:'トリートメント S',price:3300,dur:30},
-  {cat:'トリートメント',name:'トリートメント M',price:5500,dur:45},
-  {cat:'トリートメント',name:'トリートメント L',price:8800,dur:60},
-  {cat:'物販',name:'シャンプー',price:3300,dur:0},
-  {cat:'物販',name:'ヘアオイル',price:4400,dur:0},
-  {cat:'物販',name:'ワックス',price:2750,dur:0},
-  {cat:'物販',name:'ヘアスプレー',price:2200,dur:0},
-  {cat:'その他',name:'ヘッドスパ',price:5500,dur:40},
-  {cat:'その他',name:'眉カット',price:1100,dur:15},
-];
-let sales=ld('r5_s')||[];
-let rsvs=ld('r5_r')||[];
-let cartes=ld('r5_c')||[];
-let stys=ld('r5_st')||['Toshi','Sato'];
-let salon=ld('r5_sl')||{name:'REPUBLIC for hair',addr:'東京都武蔵野市吉祥寺南町2-12-10 1F',tel:'0422-24-9195',line:'https://lin.ee/IEaiZFM'};
+function load() {
+  try { const d = JSON.parse(localStorage.getItem('rfh_card2')||'null'); if(d) S=d; if(!S.dates) S.dates=[]; } catch(e){}
+}
+function save() { localStorage.setItem('rfh_card2', JSON.stringify(S)); }
 
-let cart=[],curSty=stys[0],payM='現金',curCat=null;
-let editResId=null,fromResId=null;
-let editCarteId=null,viewCarteId=null,addRecipeId=null;
-let manOver=null,editSaleId=null,curReceipt=null;
-let resDay=new Date(); resDay.setHours(0,0,0,0);
-
-// holidays: {weekdays:[[], []], dates:[{sty:0|1|2, date:'YYYY-MM-DD'}]}
-let holidays=ld('r5_hd')||{weekdays:[[],[]],dates:[]};
-
-const HOURS=['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
-  '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00'];
-const SH=48;
-
-function cats(){return[...new Set(menus.map(m=>m.cat))];}
-function eff(){return manOver!==null?manOver:cart.reduce((s,i)=>s+i.price,0);}
-function ds(d){return d.toISOString().split('T')[0];}
-
-// ━━━ CONFIRM (no window.confirm) ━━━
-function askDel(msg,cb,okTxt){
-  document.getElementById('delMsg').textContent=msg;
-  const ok=document.getElementById('delOK');
-  ok.textContent=okTxt||'削除する';
-  ok.style.background=okTxt?'var(--grn)':'var(--red)';
-  document.getElementById('delOv').classList.add('on');
-  ok.onclick=function(){closeOv('delOv');cb();};
+// JST日付を "26/5/1" 形式で返す
+function todayJST() {
+  const d = new Date(new Date().toLocaleString('en-US', {timeZone:'Asia/Tokyo'}));
+  const yy = String(d.getFullYear()).slice(2);
+  return yy + '/' + (d.getMonth()+1) + '/' + d.getDate();
 }
 
-// ━━━ OVERLAY ━━━
-function closeOv(id){document.getElementById(id).classList.remove('on');}
+function buildGrid() {
+  const g = document.getElementById('stampGrid');
+  g.innerHTML = '';
+  for (let i=0; i<TOTAL; i++) {
+    const isOn = i < S.stamps;
+    const c = document.createElement('div');
+    c.className = 'sc' + (isOn ? ' on' : '');
+    c.id = 'sc'+i;
 
-// ━━━ INIT ━━━
-window.onload=function(){
-  tick();setInterval(tick,30000);
-  curCat=cats()[0];
-  renderSty();renderCats();renderMenuGrid();renderMenuEdit();
-  loadSettings();loadHolidays();updateFilter();
-  document.getElementById('fDate').value=ds(new Date());
-  renderTL();renderHist();renderCartes();
-};
+    const ring = document.createElement('div'); ring.className = 'sc-ring';
+    const fill = document.createElement('div'); fill.className = 'sc-fill';
+    const lbl  = document.createElement('div'); lbl.className  = 'sc-label';
 
-function tick(){
-  const n=new Date();
-  document.getElementById('hdate').innerHTML=
-    n.toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'})+'<br>'+
-    n.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-}
-
-// ━━━ TABS ━━━
-function go(t){
-  const ids={res:'pg-res',pos:'pg-pos',carte:'pg-carte',hist:'pg-hist',menu:'pg-menu',set:'pg-set'};
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  const ti=['res','pos','carte','hist','menu','set'].indexOf(t);
-  if(ti>=0)document.querySelectorAll('.tab')[ti].classList.add('on');
-  document.getElementById(ids[t]).classList.add('on');
-  if(t==='hist'){updateFilter();renderHist();}
-  if(t==='menu')renderMenuEdit();
-  if(t==='set'){loadSettings();loadHolidays();}
-  if(t==='res')renderTL();
-  if(t==='carte')renderCartes();
-}
-
-// ━━━ TIMELINE ━━━
-function mvDate(d){resDay.setDate(resDay.getDate()+d);renderTL();}
-function today(){resDay=new Date();resDay.setHours(0,0,0,0);renderTL();}
-
-function renderTL(){
-  const dateStr=ds(resDay);
-  document.getElementById('dateLbl').textContent=resDay.toLocaleDateString('ja-JP',{month:'long',day:'numeric',weekday:'short'});
-  document.getElementById('th0').textContent=stys[0];
-  document.getElementById('th1').textContent=stys[1];
-
-  const day=rsvs.filter(r=>r.date===dateStr);
-  const TH=SH*HOURS.length;
-  const BG={reserved:'#e8f4fd',inprogress:'#fff8e1',done:'#f0fff4',checkedout:'#f0f0f0'};
-  const BD={reserved:'#4a7fa5',inprogress:'#f0a500',done:'#2d6a4f',checkedout:'#ccc'};
-
-  const grid=HOURS.map((_,i)=>
-    `<div style="position:absolute;top:${i*SH}px;left:0;right:0;height:1px;background:#e8e6e1;z-index:0"></div>`
-  ).join('');
-  const labels=HOURS.map((h,i)=>
-    `<div style="position:absolute;top:${i*SH+3}px;left:0;width:50px;text-align:right;padding-right:6px;font-size:10px;color:#888">${h}</div>`
-  ).join('');
-
-  function makeCol(styName,left){
-    const styIdx=stys.indexOf(styName);
-    const res=day.filter(r=>r.stylist===styName);
-    // Check if this stylist is off today (weekday or specific date)
-    const dow=resDay.getDay(); // 0=Sun
-    const wdOff=styIdx>=0&&holidays.weekdays[styIdx]&&holidays.weekdays[styIdx].includes(dow);
-    const dtOff=holidays.dates.some(h=>h.date===dateStr&&(h.sty===styIdx||h.sty===2));
-    const isOff=wdOff||dtOff;
-    // Empty slot click areas
-    const empties=HOURS.map((h,i)=>
-      `<div style="position:absolute;top:${i*SH}px;left:0;right:0;height:${SH}px;z-index:1;cursor:pointer" `+
-      `onclick="quickRes('${h}','${encodeURIComponent(styName)}','${dateStr}')"></div>`
-    ).join('');
-    // Booking blocks
-    const blocks=res.map(r=>{
-      const si=HOURS.indexOf(r.startTime);
-      if(si<0)return'';
-      const slots=Math.max(1,Math.round((r.duration||60)/30));
-      const top=si*SH,h=slots*SH-4;
-      const bg=BG[r.status]||BG.reserved,bd=BD[r.status]||BD.reserved;
-      const ci=cartes.find(x=>x.name===r.custName);
-      const al=ci&&ci.allergy&&ci.allergy!=='なし'?' ⚠️':'';
-      const rid=r.id;
-      let btns='';
-      if(r.status==='reserved')
-        btns=`<button class="bk bk-s" onclick="tlStart('${rid}')">施術開始</button>`+
-             `<button class="bk bk-p" onclick="tlCarte('${rid}')">カルテ</button>`+
-             `<button class="bk bk-e" onclick="tlEdit('${rid}')">編集</button>`+
-             `<button class="bk bk-d" onclick="tlDel('${rid}')">削除</button>`;
-      else if(r.status==='inprogress')
-        btns=`<button class="bk bk-c" onclick="tlCheckout('${rid}')">会計へ→</button>`+
-             `<button class="bk bk-p" onclick="tlCarte('${rid}')">カルテ</button>`+
-             `<button class="bk bk-d" onclick="tlDel('${rid}')">削除</button>`;
-      else if(r.status==='done')
-        btns=`<span style="font-size:9px;color:#2d6a4f">✓完了</span>`+
-             `<button class="bk bk-d" onclick="tlDel('${rid}')">削除</button>`;
-      else
-        btns=`<span style="font-size:9px;color:#888">✓会計済</span>`+
-             `<button class="bk bk-d" onclick="tlDel('${rid}')">削除</button>`;
-      return `<div style="position:absolute;top:${top}px;left:2px;right:2px;height:${h}px;`+
-        `background:${bg};border-left:5px solid ${bd};border-radius:7px;z-index:3;overflow:hidden;padding:4px 6px">`+
-        `<div style="font-weight:500;font-size:11px;margin-bottom:2px;cursor:pointer" onclick="tlCarte('${rid}')">${r.custName}${al}</div>`+
-        `<div style="font-size:9px;color:#888">${r.menu||'—'}${r.price?' ¥'+r.price.toLocaleString():''}</div>`+
-        `<div style="font-size:9px;color:#888">${r.startTime}〜${r.duration}分</div>`+
-        `<div style="display:flex;gap:3px;margin-top:3px;flex-wrap:wrap">${btns}</div></div>`;
-    }).join('');
-    return `<div style="position:absolute;top:0;${left};height:${TH}px">${empties}${blocks}${isOff?`<div class="tl-off" style="top:0;height:${TH}px"><div style="position:absolute;top:${TH/2-30}px;left:0;right:0;text-align:center;font-size:11px;color:#aaa;font-weight:500">🔴 休日</div></div>`:''}</div>`;
-  }
-
-  document.getElementById('tlBody').innerHTML=
-    `<div style="position:relative;height:${TH}px">${grid}${labels}`+
-    makeCol(stys[0],'left:52px;width:calc(50% - 28px)')+
-    makeCol(stys[1],'right:0;width:calc(50% - 28px)')+`</div>`;
-}
-
-// TL actions - defined as global functions so onclick= works
-function tlStart(rid){
-  const r=rsvs.find(x=>x.id===rid);if(!r)return;
-  r.status='inprogress';sv('r5_r',rsvs);renderTL();
-}
-function tlDel(rid){
-  const r=rsvs.find(x=>x.id===rid);
-  askDel((r?r.custName+'の':'この')+'予約を削除しますか？',function(){
-    rsvs=rsvs.filter(x=>x.id!==rid);sv('r5_r',rsvs);renderTL();
-  });
-}
-function tlEdit(rid){openResModal(rid);}
-function tlCheckout(rid){
-  const r=rsvs.find(x=>x.id===rid);if(!r)return;
-  fromResId=rid;curSty=r.stylist;manOver=r.price>0?r.price:null;
-  document.getElementById('custName').value=r.custName;
-  document.getElementById('custPhone').value=r.custPhone||'';
-  cart=r.price>0?[{name:r.menu||'施術',price:r.price,dur:r.duration||60,cat:'予約'}]:[];
-  renderCart();renderSty();
-  document.getElementById('fromBanner').style.display='block';
-  document.getElementById('fromTxt').textContent='📅 '+r.custName+' 様（'+r.startTime+'〜 '+r.stylist+'）';
-  const ci=cartes.find(x=>x.name===r.custName);
-  if(ci&&ci.allergy&&ci.allergy!=='なし'&&ci.allergy!=='')
-    setTimeout(()=>alert('⚠️ アレルギー: '+ci.allergy),200);
-  go('pos');
-}
-function tlCarte(rid){
-  const r=rsvs.find(x=>x.id===rid);if(!r)return;
-  const name=r.custName;
-  const ci=cartes.find(x=>x.name===name);
-  if(ci){viewDetail(ci.id);go('carte');}
-  else{
-    askDel(name+' 様のカルテがありません。\n新規作成しますか？',function(){
-      openNewCarte(name);go('carte');
-    },'作成する');
-  }
-}
-function quickRes(h,styEnc,date){
-  const sty=decodeURIComponent(styEnc);
-  openResModal();
-  setTimeout(()=>{
-    document.getElementById('rDate').value=date;
-    document.getElementById('rTime').value=h;
-    document.getElementById('rSty').value=sty;
-  },50);
-}
-
-function openResModal(rid){
-  editResId=rid||null;
-  document.getElementById('rSty').innerHTML=stys.map(s=>`<option>${s}</option>`).join('');
-  if(rid){
-    const r=rsvs.find(x=>x.id===rid);if(!r)return;
-    document.getElementById('resMT').textContent='予約を編集';
-    document.getElementById('rName').value=r.custName;
-    document.getElementById('rPhone').value=r.custPhone||'';
-    document.getElementById('rDate').value=r.date;
-    document.getElementById('rTime').value=r.startTime;
-    document.getElementById('rDur').value=r.duration||60;
-    document.getElementById('rMenu').value=r.menu||'';
-    document.getElementById('rPrice').value=r.price||'';
-    document.getElementById('rMemo').value=r.memo||'';
-    document.getElementById('rSty').value=r.stylist;
-  }else{
-    document.getElementById('resMT').textContent='予約を追加';
-    document.getElementById('rName').value='';
-    document.getElementById('rPhone').value='';
-    document.getElementById('rDate').value=ds(resDay);
-    document.getElementById('rTime').value='10:00';
-    document.getElementById('rDur').value='60';
-    document.getElementById('rMenu').value='';
-    document.getElementById('rPrice').value='';
-    document.getElementById('rMemo').value='';
-  }
-  document.getElementById('resOv').classList.add('on');
-}
-
-function saveRes(){
-  const name=document.getElementById('rName').value.trim();
-  if(!name){alert('お客様名を入力してください');return;}
-  const d={
-    custName:name,
-    custPhone:document.getElementById('rPhone').value.trim(),
-    stylist:document.getElementById('rSty').value,
-    date:document.getElementById('rDate').value,
-    startTime:document.getElementById('rTime').value,
-    duration:parseInt(document.getElementById('rDur').value)||60,
-    menu:document.getElementById('rMenu').value.trim(),
-    price:parseInt(document.getElementById('rPrice').value)||0,
-    memo:document.getElementById('rMemo').value.trim()
-  };
-  if(editResId){
-    const i=rsvs.findIndex(x=>x.id===editResId);
-    if(i>-1)rsvs[i]={...rsvs[i],...d};
-  }else{
-    rsvs.push({id:'r'+Date.now(),status:'reserved',...d});
-  }
-  sv('r5_r',rsvs);closeOv('resOv');renderTL();
-}
-
-// ━━━ CARTE ━━━
-function renderCartes(){
-  const q=(document.getElementById('carteQ').value||'').toLowerCase();
-  const list=cartes.filter(c=>!q||c.name.toLowerCase().includes(q)||(c.phone||'').includes(q));
-  const el=document.getElementById('carteRows');el.innerHTML='';
-  if(!list.length){el.innerHTML='<div class="empty">カルテがありません</div>';return;}
-  list.forEach(c=>{
-    const vs=sales.filter(s=>s.custName===c.name);
-    const last=vs[0]?new Date(vs[0].datetime).toLocaleDateString('ja-JP',{month:'long',day:'numeric'}):'初来店';
-    const d=document.createElement('div');d.className='carte-row';
-    d.innerHTML=`<div><div class="cr-name">${c.name}</div><div class="cr-sub">${c.phone||'—'}${c.allergy&&c.allergy!=='なし'?' ⚠️'+c.allergy:''}</div></div>`+
-      `<div class="cr-right">最終来店<br>${last}<br>${vs.length}回</div>`;
-    d.onclick=()=>viewDetail(c.id);
-    el.appendChild(d);
-  });
-}
-
-function viewDetail(id){
-  const c=cartes.find(x=>x.id===id);if(!c)return;
-  viewCarteId=id;
-  document.getElementById('carteList').style.display='none';
-  document.getElementById('carteDetail').style.display='block';
-  const el=document.getElementById('detailContent');el.innerHTML='';
-  const vs=sales.filter(s=>s.custName===c.name).slice(0,20);
-  const recs=(c.recipes||[]).slice().reverse();
-
-  // Header card
-  const h=document.createElement('div');h.className='card';
-  h.innerHTML=
-    `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">`+
-    `<div style="font-family:'Cormorant Garamond',serif;font-size:20px">${c.name} 様</div>`+
-    `<div style="display:flex;gap:6px">`+
-    `<button class="bk bk-e" id="cEB">編集</button>`+
-    `<button class="bk bk-d" id="cDB">削除</button></div></div>`+
-    `<div class="ci-grid">`+
-    `<div class="ci-box"><div class="ci-lbl">電話番号</div><div class="ci-val">${c.phone||'—'}</div></div>`+
-    `<div class="ci-box"><div class="ci-lbl">メール</div><div class="ci-val" style="font-size:11px">${c.email||'—'}</div></div>`+
-    `<div class="ci-box" style="grid-column:span 2"><div class="ci-lbl">⚠️ アレルギー・禁忌</div>`+
-    `<div class="ci-val" style="color:${c.allergy&&c.allergy!=='なし'?'var(--red)':'inherit'}">${c.allergy||'なし'}</div></div></div>`+
-    (c.memo?`<div style="font-size:12px;line-height:1.7;margin-top:8px">${c.memo}</div>`:'');
-  el.appendChild(h);
-  h.querySelector('#cEB').onclick=()=>openEditCarte(id);
-  h.querySelector('#cDB').onclick=()=>askDel(c.name+' 様のカルテを削除しますか？',function(){
-    cartes=cartes.filter(x=>x.id!==id);sv('r5_c',cartes);closeDetail();
-  });
-
-  // Recipe card
-  const rc=document.createElement('div');rc.className='card';
-  rc.innerHTML=
-    `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">`+
-    `<div style="font-size:11px;color:var(--g);letter-spacing:.08em">カラーレシピ・施術メモ</div>`+
-    `<button class="btn btn-g" id="rBtn" style="padding:5px 10px;font-size:10px">＋ 追加</button></div>`+
-    (recs.length?recs.map(r=>`<div class="rec-block"><div style="font-size:10px;color:var(--gr);margin-bottom:3px">${r.date}</div>`+
-      (r.recipe?`<div><b>レシピ：</b>${r.recipe}</div>`:'')+
-      (r.memo?`<div><b>メモ：</b>${r.memo}</div>`:'')+`</div>`).join(''):
-      '<div class="empty">レシピがありません</div>');
-  el.appendChild(rc);
-  rc.querySelector('#rBtn').onclick=()=>openRecipe(id);
-
-  // Visits card
-  const vc=document.createElement('div');vc.className='card';
-  vc.innerHTML=`<div style="font-size:11px;color:var(--g);letter-spacing:.08em;margin-bottom:10px">来店履歴（${vs.length}回）</div>`+
-    (vs.length?vs.map(v=>`<div class="visit-row">`+
-      `<div><div>${new Date(v.datetime).toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'})}</div>`+
-      `<div class="vs-menus">${(v.items||[]).map(i=>i.name).join('・')}</div>`+
-      `<div class="vs-menus">${v.stylist}</div></div>`+
-      `<div style="text-align:right"><div class="vs-amt">¥${v.total.toLocaleString()}</div>`+
-      `<div style="font-size:10px;color:var(--gr)">${v.payMethod}</div></div></div>`).join(''):
-      '<div class="empty">来店履歴がありません</div>');
-  el.appendChild(vc);
-}
-
-function closeDetail(){
-  document.getElementById('carteList').style.display='block';
-  document.getElementById('carteDetail').style.display='none';
-  viewCarteId=null;renderCartes();
-}
-function clearFrom(){fromResId=null;document.getElementById('fromBanner').style.display='none';}
-
-function openNewCarte(pre){
-  editCarteId=null;
-  document.getElementById('carteMT').textContent='カルテを新規作成';
-  document.getElementById('cName').value=pre||'';
-  ['cPhone','cEmail','cAllergy','cMemo','cRecipe'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('carteOv').classList.add('on');
-}
-function openEditCarte(id){
-  const c=cartes.find(x=>x.id===id);if(!c)return;
-  editCarteId=id;
-  document.getElementById('carteMT').textContent='カルテを編集';
-  document.getElementById('cName').value=c.name;
-  document.getElementById('cPhone').value=c.phone||'';
-  document.getElementById('cEmail').value=c.email||'';
-  document.getElementById('cAllergy').value=c.allergy||'';
-  document.getElementById('cMemo').value=c.memo||'';
-  document.getElementById('cRecipe').value='';
-  document.getElementById('carteOv').classList.add('on');
-}
-function saveCarte(){
-  const name=document.getElementById('cName').value.trim();
-  if(!name){alert('お名前を入力してください');return;}
-  const recipe=document.getElementById('cRecipe').value.trim();
-  const obj={
-    name,phone:document.getElementById('cPhone').value.trim(),
-    email:document.getElementById('cEmail').value.trim(),
-    allergy:document.getElementById('cAllergy').value.trim(),
-    memo:document.getElementById('cMemo').value.trim()
-  };
-  if(editCarteId){
-    const i=cartes.findIndex(c=>c.id===editCarteId);
-    if(i>-1){Object.assign(cartes[i],obj);if(recipe)(cartes[i].recipes=cartes[i].recipes||[]).push({date:ds(new Date()),recipe,memo:''});}
-  }else{
-    cartes.push({id:'c'+Date.now(),...obj,recipes:recipe?[{date:ds(new Date()),recipe,memo:''}]:[]});
-  }
-  sv('r5_c',cartes);closeOv('carteOv');
-  if(viewCarteId)viewDetail(viewCarteId);else renderCartes();
-}
-function openRecipe(cid){
-  addRecipeId=cid;
-  document.getElementById('rpDate').value=ds(new Date());
-  document.getElementById('rpRecipe').value='';document.getElementById('rpMemo').value='';
-  document.getElementById('recipeOv').classList.add('on');
-}
-function saveRecipe(){
-  const i=cartes.findIndex(c=>c.id===addRecipeId);if(i<0)return;
-  (cartes[i].recipes=cartes[i].recipes||[]).push({
-    date:document.getElementById('rpDate').value,
-    recipe:document.getElementById('rpRecipe').value.trim(),
-    memo:document.getElementById('rpMemo').value.trim()
-  });
-  sv('r5_c',cartes);closeOv('recipeOv');viewDetail(addRecipeId);
-}
-
-// ━━━ POS ━━━
-function renderSty(){
-  document.getElementById('styRow').innerHTML=stys.map(s=>
-    `<button class="sty-btn ${s===curSty?'on':''}" onclick="setSty(this,'${s}')">${s}</button>`
-  ).join('');
-}
-function setSty(el,s){document.querySelectorAll('.sty-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');curSty=s;}
-
-function doSug(){
-  const v=document.getElementById('custName').value.toLowerCase();
-  const el=document.getElementById('sugList');
-  if(!v){el.style.display='none';return;}
-  const all=[...new Set([...sales.map(s=>s.custName),...cartes.map(c=>c.name)].filter(Boolean))];
-  const m=all.filter(n=>n.toLowerCase().includes(v));
-  if(!m.length){el.style.display='none';return;}
-  el.innerHTML='';el.style.display='block';
-  m.forEach(n=>{
-    const d=document.createElement('div');d.className='sug-item';d.textContent=n;
-    d.onclick=function(){
-      document.getElementById('custName').value=n;el.style.display='none';
-      const ci=cartes.find(c=>c.name===n);
-      if(ci&&ci.allergy&&ci.allergy!=='なし'&&ci.allergy!=='')alert('⚠️ アレルギー: '+ci.allergy);
-    };
-    el.appendChild(d);
-  });
-}
-document.addEventListener('click',e=>{if(!e.target.closest('.sug-wrap'))document.getElementById('sugList').style.display='none';});
-
-function renderCats(){
-  document.getElementById('catRow').innerHTML=cats().map(c=>
-    `<button class="cat-btn ${c===curCat?'on':''}" onclick="setCat('${c}')">${c}</button>`
-  ).join('');
-}
-function setCat(c){curCat=c;renderCats();renderMenuGrid();}
-
-function renderMenuGrid(){
-  const el=document.getElementById('menuGrid');el.innerHTML='';
-  menus.filter(m=>m.cat===curCat).forEach(m=>{
-    const d=document.createElement('div');d.className='mi';
-    d.innerHTML=`<div class="mi-name">${m.name}</div><div class="mi-price">¥${m.price.toLocaleString()}</div>${m.dur?`<div class="mi-dur">⏱${m.dur}分</div>`:''}`;
-    d.onclick=()=>{cart.push({...m});renderCart();};
-    el.appendChild(d);
-  });
-}
-
-function renderCart(){
-  const el=document.getElementById('orderList');el.innerHTML='';
-  if(!cart.length){el.innerHTML='<div class="empty">メニューを選択してください</div>';}
-  else{
-    cart.forEach((item,i)=>{
-      const d=document.createElement('div');d.className='oi';
-      d.innerHTML=`<span class="oi-name">${item.name}</span><span class="oi-price">¥${item.price.toLocaleString()}</span>`;
-      const b=document.createElement('button');b.className='rm-btn';b.textContent='×';
-      b.onclick=()=>{cart.splice(i,1);renderCart();};
-      d.appendChild(b);el.appendChild(d);
-    });
-  }
-  const t=eff(),tax=Math.round(t-t/1.1),dur=cart.reduce((s,i)=>s+(i.dur||0),0);
-  document.getElementById('totalAmt').textContent='¥'+t.toLocaleString();
-  document.getElementById('taxAmt').textContent='¥'+tax.toLocaleString();
-  document.getElementById('durAmt').textContent=dur?dur+'分':'—';
-  const qa=qc(t);const qr=document.getElementById('qcRow');qr.innerHTML='';
-  qa.forEach(a=>{const b=document.createElement('button');b.className='qc-btn';b.textContent='¥'+a.toLocaleString();
-    b.onclick=()=>{document.getElementById('cashIn').value=a;calcChange();updBtn();};qr.appendChild(b);});
-  calcChange();updBtn();
-}
-function qc(t){const v=t||0;if(v<=0)return[1000,5000,10000,50000];const s=new Set();[1000,5000,10000,50000].forEach(d=>{const x=Math.ceil(v/d)*d;if(x>=v)s.add(x);});return[...s].slice(0,4);}
-function calcChange(){
-  const t=eff(),cash=parseInt(document.getElementById('cashIn').value)||0;
-  const el=document.getElementById('changeVal');
-  if(payM!=='現金'){el.textContent='—';el.className='change-val';return;}
-  if(!cash){el.textContent='—';el.className='change-val';return;}
-  const ch=cash-t;
-  el.textContent=ch<0?'¥'+Math.abs(ch).toLocaleString()+' 不足':'¥'+ch.toLocaleString();
-  el.className='change-val'+(ch<0?' neg':'');
-  updBtn();
-}
-function updBtn(){
-  const t=eff(),cash=parseInt(document.getElementById('cashIn').value)||0;
-  const btn=document.getElementById('compBtn');
-  const has=cart.length>0||(manOver!==null&&manOver>0);
-  btn.disabled=!has||(payM==='現金'&&cash<t);
-}
-function setPay(el,m){
-  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');payM=m;
-  document.getElementById('cashArea').style.display=m==='現金'?'block':'none';
-  if(m!=='現金')document.getElementById('changeVal').textContent='—';
-  calcChange();updBtn();
-}
-function togEdit(){
-  const a=document.getElementById('editArea'),h=a.style.display==='none';
-  a.style.display=h?'block':'none';
-  const b=document.getElementById('editBtn');b.textContent=h?'閉じる':'変更';b.style.color=h?'#888':'#b8976a';
-  if(h)document.getElementById('manIn').value=eff();
-}
-function applyMan(){
-  const v=parseInt(document.getElementById('manIn').value);
-  if(!isNaN(v)&&v>=0){
-    manOver=v;
-    document.getElementById('totalAmt').textContent='¥'+v.toLocaleString();
-    document.getElementById('totalAmt').style.color='#2d6a4f';
-    document.getElementById('taxAmt').textContent='¥'+Math.round(v-v/1.1).toLocaleString();
-    const qa=qc(v);const qr=document.getElementById('qcRow');qr.innerHTML='';
-    qa.forEach(a=>{const b=document.createElement('button');b.className='qc-btn';b.textContent='¥'+a.toLocaleString();
-      b.onclick=()=>{document.getElementById('cashIn').value=a;calcChange();updBtn();};qr.appendChild(b);});
-    calcChange();updBtn();
-  }
-}
-function disc(pct){const v=Math.max(0,Math.floor(eff()*(1-pct/100)/10)*10);document.getElementById('manIn').value=v;applyMan();}
-function resetMan(){manOver=null;document.getElementById('manIn').value='';document.getElementById('totalAmt').style.color='inherit';renderCart();}
-function clearOrder(){
-  cart=[];fromResId=null;payM='現金';manOver=null;
-  ['cashIn','custName','custPhone','custEmail'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('fromBanner').style.display='none';
-  document.getElementById('editArea').style.display='none';
-  document.getElementById('editBtn').textContent='変更';document.getElementById('editBtn').style.color='#b8976a';
-  document.getElementById('totalAmt').style.color='inherit';
-  document.querySelectorAll('.pay-btn').forEach((b,i)=>b.classList.toggle('on',i===0));
-  document.getElementById('cashArea').style.display='block';
-  renderCart();
-}
-function completeSale(){
-  const t=eff(),cash=parseInt(document.getElementById('cashIn').value)||t;
-  const chg=payM==='現金'?cash-t:0;
-  const name=document.getElementById('custName').value.trim()||'（未入力）';
-  const items=cart.length?[...cart]:[{name:'施術',price:t,dur:0,cat:'予約'}];
-  const sale={id:Date.now(),datetime:new Date().toISOString(),stylist:curSty,custName:name,
-    custPhone:document.getElementById('custPhone').value.trim(),
-    custEmail:document.getElementById('custEmail').value.trim(),
-    items,total:t,payMethod:payM,cash:payM==='現金'?cash:t,change:chg,memo:'',fromResId:fromResId||null};
-  sales.unshift(sale);sv('r5_s',sales);
-  if(fromResId){const r=rsvs.find(x=>x.id===fromResId);if(r){r.status='checkedout';sv('r5_r',rsvs);}}
-  curReceipt=sale;showReceipt(sale);
-}
-
-// ━━━ RECEIPT ━━━
-function showReceipt(s){
-  const dt=new Date(s.datetime);
-  document.getElementById('rcInfo').innerHTML=
-    dt.toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'})+' '+
-    dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'<br>担当: '+s.stylist+'<br>No. '+String(s.id).slice(-6);
-  document.getElementById('rcCust').textContent=s.custName!=='（未入力）'?s.custName+' 様':'';
-  document.getElementById('rcItems').innerHTML=(s.items||[]).map(i=>`<div class="rc-item"><span>${i.name}</span><span>¥${i.price.toLocaleString()}</span></div>`).join('');
-  const tax=Math.round(s.total-s.total/1.1);
-  let h=`<div class="rc-tr"><span>小計</span><span>¥${s.total.toLocaleString()}</span></div>`+
-    `<div class="rc-tr"><span>内消費税(10%)</span><span>¥${tax.toLocaleString()}</span></div>`+
-    `<div class="rc-tr grand"><span>合計</span><span>¥${s.total.toLocaleString()}</span></div>`+
-    `<div class="rc-tr"><span>お支払い</span><span>${s.payMethod}</span></div>`;
-  if(s.payMethod==='現金')h+=`<div class="rc-tr"><span>お預かり</span><span>¥${s.cash.toLocaleString()}</span></div><div class="rc-tr change"><span>お釣り</span><span>¥${s.change.toLocaleString()}</span></div>`;
-  document.getElementById('rcTotals').innerHTML=h;
-  document.getElementById('rcLine').style.display=salon.line?'block':'none';
-  document.getElementById('rcFooter').innerHTML=salon.addr+'<br>TEL: '+salon.tel+'<br>営業時間: 10:00〜20:00　隔週火曜定休<br><br>ありがとうございました<br>Thank you for visiting REPUBLIC';
-  document.getElementById('rcOv').classList.add('on');
-}
-function rcMsg(s){
-  const dt=new Date(s.datetime);
-  const items=(s.items||[]).map(i=>'・'+i.name+' ¥'+i.price.toLocaleString()).join('\n');
-  const tax=Math.round(s.total-s.total/1.1);
-  let m='【REPUBLIC for hair レシート】\n'+dt.toLocaleDateString('ja-JP')+' '+dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'\n担当: '+s.stylist+'\n';
-  if(s.custName&&s.custName!=='（未入力）')m+='お客様: '+s.custName+' 様\n';
-  m+='\n'+items+'\n\n合計: ¥'+s.total.toLocaleString()+'（税込）\n内消費税: ¥'+tax.toLocaleString()+'\nお支払い: '+s.payMethod;
-  if(s.payMethod==='現金')m+='\nお預かり: ¥'+s.cash.toLocaleString()+'\nお釣り: ¥'+s.change.toLocaleString();
-  m+='\n\n'+salon.addr+'\nTEL: '+salon.tel+'\nありがとうございました';
-  return m;
-}
-function shareViaLine(){if(!curReceipt)return;window.open('https://line.me/R/msg/text/?'+encodeURIComponent(rcMsg(curReceipt)),'_blank');}
-function showQR(){
-  if(!curReceipt)return;
-  const url='https://line.me/R/msg/text/?'+encodeURIComponent(rcMsg(curReceipt));
-  const qa=document.getElementById('qrArea');qa.style.display='block';
-  qa.innerHTML='<div id="qrBox" style="display:inline-block"></div>';
-  if(typeof QRCode!=='undefined'){
-    try{
-      new QRCode(document.getElementById('qrBox'),{
-        text:url,width:160,height:160,
-        colorDark:'#0a0a0a',colorLight:'#ffffff',
-        correctLevel:QRCode.CorrectLevel.M
-      });
-    }catch(e){
-      qa.innerHTML='<p style="font-size:9px;color:#c0392b">QR生成エラー。LINEで送るをご利用ください。</p>';
+    if (isOn && S.dates[i]) {
+      // スタンプ済み：年/月/日表示（3行）
+      const parts = S.dates[i].split('/'); // ["26","5","1"]
+      if (parts.length === 3) {
+        lbl.innerHTML = `<span class="sc-year">'${parts[0]}</span><span class="sc-month">${parts[1]}/${parts[2]}</span>`;
+      } else {
+        // 旧データ（年なし）対応
+        lbl.innerHTML = `<span class="sc-month">${parts[0]}/</span><span class="sc-day">${parts[1]}</span>`;
+      }
+    } else if (i === 9) {
+      lbl.textContent = '★';
+    } else {
+      lbl.textContent = String(i+1).padStart(2,'0');
     }
-  }else{
-    qa.innerHTML='<p style="font-size:9px;word-break:break-all">'+url+'</p>';
+
+    c.appendChild(ring); c.appendChild(fill); c.appendChild(lbl);
+    g.appendChild(c);
   }
 }
-function copyRc(){
-  if(!curReceipt)return;
-  const msg=rcMsg(curReceipt);
-  const done=()=>{const e=document.getElementById('copyDone');e.style.display='block';setTimeout(()=>e.style.display='none',3000);};
-  if(navigator.clipboard)navigator.clipboard.writeText(msg).then(done).catch(()=>{const ta=document.createElement('textarea');ta.value=msg;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);});
-  else{const ta=document.createElement('textarea');ta.value=msg;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+
+function updateUI() {
+  for (let i=0;i<TOTAL;i++) {
+    const c = document.getElementById('sc'+i);
+    if (!c) continue;
+    c.classList.toggle('on', i < S.stamps);
+  }
+  const pct = (S.stamps/TOTAL)*100;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progText').textContent = S.stamps+' / '+TOTAL;
+  document.getElementById('visitNum').textContent = S.total;
+
+  document.getElementById('btnStamp').disabled = S.coupon;
+
+  const cw = document.getElementById('couponWrap');
+  if (S.coupon) { cw.classList.add('show'); }
+  else          { cw.classList.remove('show'); cw.style.display='none'; }
+
+  renderHist();
 }
 
-// ━━━ HISTORY ━━━
-function updateFilter(){
-  const sel=document.getElementById('fSty');const cur=sel.value;
-  sel.innerHTML='<option value="">全スタイリスト</option>'+stys.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join('');
+function addStamp() {
+  if (S.coupon) return;
+  S.dates[S.stamps] = todayJST(); // 来店日を記録
+  S.stamps++; S.total++;
+
+  buildGrid();
+  // animate new cell
+  const cell = document.getElementById('sc'+(S.stamps-1));
+  if (cell) {
+    cell.classList.remove('on');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>cell.classList.add('on')));
+  }
+
+  if (S.stamps >= TOTAL) {
+    S.coupon = true;
+    S.hist.push({ round: Math.ceil(S.total/TOTAL), redeemed:false });
+    setTimeout(celebrate, 320);
+  }
+  save(); updateUI();
 }
-function renderHist(){
-  const today=new Date().toDateString();
-  const ts=sales.filter(s=>new Date(s.datetime).toDateString()===today);
-  const dt=ts.reduce((s,i)=>s+i.total,0);
-  document.getElementById('dsSales').textContent='¥'+dt.toLocaleString();
-  document.getElementById('dsCnt').textContent=ts.length+'件';
-  document.getElementById('dsAvg').textContent=ts.length?'¥'+Math.round(dt/ts.length).toLocaleString():'—';
-  const fs=document.getElementById('fSty').value,fd=document.getElementById('fDate').value;
-  let f=sales;
-  if(fs)f=f.filter(s=>s.stylist===fs);
-  if(fd)f=f.filter(s=>s.datetime.startsWith(fd));
-  const el=document.getElementById('histRows');el.innerHTML='';
-  if(!f.length){el.innerHTML='<div class="empty">該当する取引がありません</div>';return;}
-  f.forEach(function(s){
-    const dt2=new Date(s.datetime);
-    const ts2=dt2.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})+' '+dt2.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-    const ms=(s.items||[]).map(i=>i.name).join('・')||'—';
-    const div=document.createElement('div');div.className='sh-item';
-    const top=document.createElement('div');top.className='sh-top';
-    top.innerHTML=`<div><div class="sh-time">${ts2}</div><div class="sh-name">${s.custName||'—'}</div><div class="sh-detail">${ms}</div><div class="sh-sty">${s.stylist}</div></div>`+
-      `<div style="text-align:right"><div class="sh-amt">¥${s.total.toLocaleString()}</div><div class="sh-pay">${s.payMethod}</div></div>`;
-    const acts=document.createElement('div');acts.className='sh-acts';
-    const bE=document.createElement('button');bE.className='hbtn';bE.textContent='✏️ 修正';
-    const bL=document.createElement('button');bL.className='hbtn hbtn-line';bL.textContent='LINE';
-    const bD=document.createElement('button');bD.className='hbtn hbtn-del';bD.textContent='🗑 削除';
-    // Use closure to capture sale object
-    (function(sale){
-      bE.onclick=function(){openEditSale(sale.id);};
-      bL.onclick=function(){curReceipt=sale;shareViaLine();};
-      bD.onclick=function(){
-        askDel(sale.custName+'（¥'+sale.total.toLocaleString()+'）を削除しますか？',function(){
-          if(sale.fromResId){rsvs=rsvs.filter(r=>r.id!==sale.fromResId);sv('r5_r',rsvs);}
-          else if(sale.custName){
-            const sd=new Date(sale.datetime).toISOString().split('T')[0];
-            rsvs=rsvs.filter(r=>!(r.custName===sale.custName&&r.date===sd&&r.status==='checkedout'));
-            sv('r5_r',rsvs);
-          }
-          sales=sales.filter(x=>x.id!==sale.id);sv('r5_s',sales);
-          renderHist();renderTL();
-        });
+
+function redeemCoupon() {
+  if (!S.coupon) return;
+  const last = S.hist[S.hist.length-1];
+  if (last) last.redeemed = true;
+  S.stamps = 0; S.coupon = false; S.dates = [];
+  save(); buildGrid(); updateUI();
+}
+
+function renderHist() {
+  const wrap = document.getElementById('histWrap');
+  const list = document.getElementById('histList');
+  if (!S.hist.length) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  list.innerHTML='';
+  [...S.hist].reverse().forEach(h => {
+    const el = document.createElement('div');
+    el.className='h-item';
+    el.innerHTML=`<span class="h-round">Round ${h.round}</span><span class="h-status ${h.redeemed?'used':''}">${h.redeemed?'Redeemed':'Ready'}</span>`;
+    list.appendChild(el);
+  });
+}
+
+function doReset() {
+  if (!confirm('カードをリセットしますか？')) return;
+  S = { stamps:0, total:0, coupon:false, hist:[], dates:[] };
+  save(); buildGrid(); updateUI();
+}
+
+function celebrate() {
+  const cols = ['#C2A278','#B89278','#DBC49E','#1A1A18','#F4EFE7','#CEB09A'];
+  for (let i=0;i<32;i++) {
+    setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className='particle';
+      const sz = 3+Math.random()*4;
+      p.style.cssText=`left:${18+Math.random()*64}vw;top:42vh;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.45?'50%':'1px'};`;
+      document.body.appendChild(p);
+      let t=0, vx=(Math.random()-.5)*6, vy=-(4+Math.random()*7);
+      let x=parseFloat(p.style.left), y=parseFloat(p.style.top);
+      const go=()=>{
+        t+=0.025; x+=vx*.7; y+=vy+t*4.5;
+        p.style.left=x+'px'; p.style.top=y+'px';
+        p.style.opacity=Math.max(0,1-t);
+        if(t<1) requestAnimationFrame(go); else p.remove();
       };
-    })(s);
-    acts.appendChild(bE);acts.appendChild(bL);acts.appendChild(bD);
-    div.appendChild(top);div.appendChild(acts);el.appendChild(div);
-  });
-}
-function openEditSale(id){
-  const s=sales.find(x=>x.id===id);if(!s)return;
-  editSaleId=id;
-  document.getElementById('eCust').value=s.custName||'';
-  document.getElementById('eSty').innerHTML=stys.map(x=>`<option ${x===s.stylist?'selected':''}>${x}</option>`).join('');
-  document.getElementById('eTotal').value=s.total;
-  document.getElementById('ePay').value=s.payMethod;
-  document.getElementById('eMemo').value=s.memo||'';
-  document.getElementById('editSaleOv').classList.add('on');
-}
-function saveEditSale(){
-  const i=sales.findIndex(s=>s.id===editSaleId);if(i<0)return;
-  sales[i].custName=document.getElementById('eCust').value||'（未入力）';
-  sales[i].stylist=document.getElementById('eSty').value;
-  sales[i].total=parseInt(document.getElementById('eTotal').value)||sales[i].total;
-  sales[i].payMethod=document.getElementById('ePay').value;
-  sales[i].memo=document.getElementById('eMemo').value;
-  sv('r5_s',sales);closeOv('editSaleOv');renderHist();
+      requestAnimationFrame(go);
+    }, i*38);
+  }
 }
 
-// ━━━ MENU EDIT ━━━
-function renderMenuEdit(){
-  const el=document.getElementById('menuEdit');el.innerHTML='';
-  cats().forEach(cat=>{
-    const items=menus.filter(m=>m.cat===cat);
-    const div=document.createElement('div');div.className='me-cat';
-    div.innerHTML='<div class="me-ctitle">'+cat+'</div>';
-    items.forEach(m=>{
-      const idx=menus.indexOf(m);
-      const row=document.createElement('div');row.className='me-row';
-      const ni=document.createElement('input');ni.className='in-name';ni.type='text';ni.value=m.name;
-      ni.onchange=()=>{menus[idx].name=ni.value;sv('r5_m',menus);renderMenuGrid();};
-      const pi=document.createElement('input');pi.className='in-price';pi.type='number';pi.value=m.price;
-      pi.onchange=()=>{menus[idx].price=parseInt(pi.value)||0;sv('r5_m',menus);renderMenuGrid();};
-      const di=document.createElement('input');di.className='in-dur';di.type='number';di.value=m.dur||0;di.placeholder='分';
-      di.onchange=()=>{menus[idx].dur=parseInt(di.value)||0;sv('r5_m',menus);renderMenuGrid();};
-      const db=document.createElement('button');db.className='me-del';db.textContent='削除';
-      db.onclick=()=>{menus.splice(idx,1);sv('r5_m',menus);renderMenuEdit();renderCats();renderMenuGrid();};
-      row.appendChild(ni);row.appendChild(pi);row.appendChild(di);row.appendChild(db);div.appendChild(row);
-    });
-    el.appendChild(div);
-  });
-}
-function addMenu(){
-  const cat=document.getElementById('newCat').value;
-  const name=document.getElementById('newName').value.trim();
-  const price=parseInt(document.getElementById('newPrice').value)||0;
-  const dur=parseInt(document.getElementById('newDur').value)||0;
-  if(!name||!price){alert('メニュー名と金額を入力してください');return;}
-  menus.push({cat,name,price,dur});sv('r5_m',menus);
-  ['newName','newPrice','newDur'].forEach(id=>document.getElementById(id).value='');
-  renderMenuEdit();renderCats();renderMenuGrid();
-}
-
-// ━━━ SETTINGS ━━━
-function loadSettings(){
-  document.getElementById('s1').value=stys[0]||'';
-  document.getElementById('s2').value=stys[1]||'';
-  document.getElementById('sName').value=salon.name;
-  document.getElementById('sAddr').value=salon.addr;
-  document.getElementById('sTel').value=salon.tel;
-  document.getElementById('sLine').value=salon.line||'';
-}
-function saveSty(){
-  const s1=document.getElementById('s1').value.trim();
-  const s2=document.getElementById('s2').value.trim();
-  if(!s1||!s2){alert('名前を入力してください');return;}
-  stys=[s1,s2];curSty=s1;sv('r5_st',stys);
-  renderSty();updateFilter();
-  document.getElementById('th0').textContent=s1;document.getElementById('th1').textContent=s2;
-  alert('保存しました');
-}
-function saveSalon(){
-  salon={name:document.getElementById('sName').value,addr:document.getElementById('sAddr').value,
-    tel:document.getElementById('sTel').value,line:document.getElementById('sLine').value};
-  sv('r5_sl',salon);alert('保存しました');
-}
-
-// ━━━ HOLIDAYS ━━━
-const WDAYS=['日','月','火','水','木','金','土'];
-
-function loadHolidays(){
-  // Update stylist name labels
-  document.getElementById('hdSty1Name').textContent=stys[0];
-  document.getElementById('hdSty2Name').textContent=stys[1];
-  document.getElementById('hdOpt0').textContent=stys[0];
-  document.getElementById('hdOpt1').textContent=stys[1];
-  // Render weekday buttons for each stylist
-  [0,1].forEach(si=>{
-    const el=document.getElementById('hdWeek'+si);
-    el.innerHTML=WDAYS.map((w,d)=>{
-      const on=holidays.weekdays[si]&&holidays.weekdays[si].includes(d);
-      return `<button class="hday-btn ${on?'on':''}" onclick="toggleWday(${si},${d},this)">${w}</button>`;
-    }).join('');
-  });
-  renderHolidayDates();
-}
-
-function toggleWday(si,dow,btn){
-  if(!holidays.weekdays[si])holidays.weekdays[si]=[];
-  const idx=holidays.weekdays[si].indexOf(dow);
-  if(idx>=0){holidays.weekdays[si].splice(idx,1);btn.classList.remove('on');}
-  else{holidays.weekdays[si].push(dow);btn.classList.add('on');}
-  sv('r5_hd',holidays);
-  renderTL();
-}
-
-function addHoliday(){
-  const date=document.getElementById('hdDateIn').value;
-  if(!date){alert('日付を選択してください');return;}
-  const sty=parseInt(document.getElementById('hdDateSty').value);
-  // Avoid duplicates
-  const exists=holidays.dates.some(h=>h.date===date&&h.sty===sty);
-  if(exists){alert('すでに登録されています');return;}
-  holidays.dates.push({date,sty});
-  holidays.dates.sort((a,b)=>a.date.localeCompare(b.date));
-  sv('r5_hd',holidays);
-  renderHolidayDates();
-  renderTL();
-}
-
-function removeHoliday(idx){
-  holidays.dates.splice(idx,1);
-  sv('r5_hd',holidays);
-  renderHolidayDates();
-  renderTL();
-}
-
-function renderHolidayDates(){
-  const el=document.getElementById('hdDateList');
-  if(!holidays.dates.length){el.innerHTML='<span style="font-size:10px;color:var(--gr)">臨時休業日はありません</span>';return;}
-  el.innerHTML=holidays.dates.map((h,i)=>{
-    const styLabel=h.sty===2?'両方':stys[h.sty];
-    const d=new Date(h.date+'T00:00:00');
-    const label=d.toLocaleDateString('ja-JP',{month:'long',day:'numeric',weekday:'short'});
-    return `<div class="hday-tag">${label}（${styLabel}）<button onclick="removeHoliday(${i})">×</button></div>`;
-  }).join('');
-}
-
-// ━━━ BACKUP ━━━
-function dl(name,data){const a=document.createElement('a');a.href=data;a.download=name;a.click();}
-function today_str(){return new Date().toISOString().split('T')[0];}
-function exportCSV(){
-  if(!sales.length){alert('売上データがありません');return;}
-  const csv='\uFEFF日時,顧客名,担当,メニュー,合計,支払,メモ\n'+
-    sales.map(s=>`"${new Date(s.datetime).toLocaleString('ja-JP')}","${s.custName||''}","${s.stylist}","${(s.items||[]).map(i=>i.name).join('/')}",${s.total},"${s.payMethod}","${s.memo||''}"`).join('\n');
-  dl('republic_sales_'+today_str()+'.csv','data:text/csv;charset=utf-8,'+encodeURIComponent(csv));
-}
-function exportCarteCSV(){
-  if(!cartes.length){alert('カルテがありません');return;}
-  const rows=cartes.map(c=>{
-    const vs=sales.filter(s=>s.custName===c.name);
-    const last=vs[0]?new Date(vs[0].datetime).toLocaleDateString('ja-JP'):'';
-    const rec=(c.recipes&&c.recipes.length)?c.recipes[c.recipes.length-1].recipe:'';
-    return `"${c.name}","${c.phone||''}","${c.email||''}","${c.allergy||''}","${(c.memo||'').replace(/"/g,'""')}","${rec.replace(/"/g,'""')}",${vs.length},"${last}"`;
-  });
-  dl('republic_cartes_'+today_str()+'.csv','data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFFお名前,電話,メール,アレルギー,担当者メモ,最新レシピ,来店回数,最終来店\n'+rows.join('\n')));
-}
-function exportResCSV(){
-  if(!rsvs.length){alert('予約データがありません');return;}
-  const csv='\uFEFF日付,時間,顧客名,電話,担当,メニュー,料金,施術時間,ステータス\n'+
-    rsvs.map(r=>`${r.date},${r.startTime},"${r.custName}","${r.custPhone||''}","${r.stylist}","${r.menu||''}",${r.price||0},${r.duration||60},${r.status}`).join('\n');
-  dl('republic_reservations_'+today_str()+'.csv','data:text/csv;charset=utf-8,'+encodeURIComponent(csv));
-}
-function exportAll(){
-  const b={version:5,exportDate:new Date().toISOString(),salon,stys,menus,sales,rsvs,cartes,holidays};
-  dl('republic_backup_'+today_str()+'.json','data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(b,null,2)));
-  alert('バックアップを書き出しました。\nGoogleドライブに保存してください。');
-}
-function doImport(e){
-  const file=e.target.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=function(ev){
-    try{
-      const d=JSON.parse(ev.target.result);
-      if(d.salon){salon=d.salon;sv('r5_sl',salon);}
-      if(d.stys){stys=d.stys;sv('r5_st',stys);}
-      if(d.menus){menus=d.menus;sv('r5_m',menus);}
-      if(d.sales){sales=d.sales;sv('r5_s',sales);}
-      if(d.rsvs){rsvs=d.rsvs;sv('r5_r',rsvs);}
-      if(d.cartes){cartes=d.cartes;sv('r5_c',cartes);}
-      if(d.holidays){holidays=d.holidays;sv('r5_hd',holidays);}
-      // v4 compatibility
-      if(d.salesHistory&&!d.sales){sales=d.salesHistory;sv('r5_s',sales);}
-      if(d.reservations&&!d.rsvs){rsvs=d.reservations;sv('r5_r',rsvs);}
-      alert('復元完了！');
-      loadSettings();loadHolidays();renderSty();renderCats();renderMenuGrid();renderMenuEdit();
-      updateFilter();renderHist();renderCartes();renderTL();
-    }catch(ex){alert('ファイルの読み込みに失敗しました');}
-  };
-  r.readAsText(file);e.target.value='';
-}
+load(); buildGrid(); updateUI();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>
