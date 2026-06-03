@@ -417,6 +417,7 @@
   .page-foot {
     margin-top:40px; text-align:center;
     position:relative; z-index:1;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
   }
 
   .reset-btn {
@@ -429,6 +430,74 @@
     transition:color 0.2s;
   }
   .reset-btn:hover { color:rgba(26,26,24,0.5); }
+
+  .staff-btn {
+    font-size:7px; letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:rgba(26,26,24,0.15);
+    background:none; border:none;
+    cursor:pointer; font-family:'Jost',sans-serif;
+    font-weight:200;
+    transition:color 0.2s;
+  }
+  .staff-btn:hover { color:rgba(26,26,24,0.35); }
+
+  /* Staff Panel */
+  .staff-panel {
+    width:calc(100% - 32px); max-width:390px;
+    margin:16px auto 0;
+    background:var(--card-bg);
+    border:1px solid var(--border-strong);
+    border-radius:3px;
+    padding:24px 22px;
+    position:relative; z-index:1;
+    text-align:center;
+  }
+
+  .sp-title {
+    font-size:9px; letter-spacing:0.45em;
+    text-transform:uppercase; color:var(--accent);
+    margin-bottom:18px; font-weight:300;
+  }
+
+  .sp-label {
+    font-size:11px; color:var(--mid);
+    margin-bottom:14px; letter-spacing:0.05em;
+  }
+
+  .sp-pin-input {
+    display:block; margin:0 auto 16px;
+    width:120px; text-align:center;
+    font-size:22px; letter-spacing:0.4em;
+    padding:10px 12px;
+    border:1px solid var(--border-strong);
+    border-radius:2px;
+    background:var(--warm-white);
+    font-family:'Jost',sans-serif;
+    color:var(--charcoal);
+    outline:none;
+  }
+
+  .sp-actions {
+    display:flex; gap:10px; justify-content:center;
+    margin-bottom:12px;
+  }
+
+  .sp-btn {
+    padding:11px 20px;
+    font-family:'Jost',sans-serif;
+    font-size:9px; letter-spacing:0.3em;
+    text-transform:uppercase; font-weight:300;
+    border-radius:1px; cursor:pointer;
+    transition:opacity 0.2s;
+    border:none;
+  }
+
+  .sp-btn-confirm { background:var(--charcoal); color:var(--cream); }
+  .sp-btn-minus   { background:var(--warm-white); color:var(--charcoal); border:1px solid var(--border-strong); }
+  .sp-btn-plus    { background:var(--charcoal); color:var(--cream); }
+  .sp-btn-cancel  { background:none; color:var(--light); border:1px solid var(--border); }
+  .sp-btn:hover   { opacity:0.75; }
 
   /* ── PARTICLES ── */
   .particle {
@@ -552,6 +621,26 @@
 <!-- PAGE FOOTER -->
 <div class="page-foot">
   <button class="reset-btn" onclick="doReset()">Reset Card</button>
+  <button class="staff-btn" onclick="openStaffPanel()">Staff</button>
+</div>
+
+<!-- STAFF PANEL -->
+<div class="staff-panel" id="staffPanel" style="display:none">
+  <div class="sp-title">Staff Mode</div>
+  <div class="sp-pin-wrap" id="spPinWrap">
+    <div class="sp-label">PINを入力してください</div>
+    <input class="sp-pin-input" id="spPinInput" type="password" inputmode="numeric" maxlength="4" placeholder="····">
+    <button class="sp-btn sp-btn-confirm" onclick="checkPin()">確認</button>
+    <button class="sp-btn sp-btn-cancel" onclick="closeStaffPanel()">キャンセル</button>
+  </div>
+  <div class="sp-controls" id="spControls" style="display:none">
+    <div class="sp-label">現在のスタンプ数：<span id="spCount">0</span></div>
+    <div class="sp-actions">
+      <button class="sp-btn sp-btn-minus" onclick="staffRemove()">− スタンプ削除</button>
+      <button class="sp-btn sp-btn-plus" onclick="staffAdd()">＋ スタンプ追加</button>
+    </div>
+    <button class="sp-btn sp-btn-cancel" onclick="closeStaffPanel()">閉じる</button>
+  </div>
 </div>
 
 <script>
@@ -623,13 +712,72 @@ function updateUI() {
   renderHist();
 }
 
+// サロンの位置情報（吉祥寺）
+const SALON_LAT  = 35.7016;
+const SALON_LNG  = 139.5796;
+const SALON_RADIUS = 150; // メートル
+
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
 function addStamp() {
   if (S.coupon) return;
-  S.dates[S.stamps] = todayJST(); // 来店日を記録
+
+  // 1日1回制限チェック
+  const today = todayJST();
+  if (S.lastStampDate === today) {
+    alert('本日はすでにスタンプが押されています。\nNext visit, we look forward to seeing you! ✂');
+    return;
+  }
+
+  // ボタンを一時的に無効化
+  const btn = document.getElementById('btnStamp');
+  btn.disabled = true;
+  btn.textContent = '位置情報確認中...';
+
+  // 位置情報チェック
+  if (!navigator.geolocation) {
+    doAddStamp(today);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const dist = calcDistance(
+        pos.coords.latitude, pos.coords.longitude,
+        SALON_LAT, SALON_LNG
+      );
+      if (dist <= SALON_RADIUS) {
+        doAddStamp(today);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Add Visit';
+        alert('サロン内からのみスタンプが押せます。\nStamps can only be added at the salon. ✂');
+      }
+    },
+    (err) => {
+      // 位置情報を拒否された場合は押せない
+      btn.disabled = false;
+      btn.textContent = 'Add Visit';
+      alert('位置情報を許可してください。\nPlease allow location access to add a stamp. 📍');
+    },
+    { timeout: 10000, maximumAge: 0, enableHighAccuracy: true }
+  );
+}
+
+function doAddStamp(today) {
+  S.lastStampDate = today;
+  S.dates[S.stamps] = today;
   S.stamps++; S.total++;
 
   buildGrid();
-  // animate new cell
   const cell = document.getElementById('sc'+(S.stamps-1));
   if (cell) {
     cell.classList.remove('on');
@@ -648,7 +796,7 @@ function redeemCoupon() {
   if (!S.coupon) return;
   const last = S.hist[S.hist.length-1];
   if (last) last.redeemed = true;
-  S.stamps = 0; S.coupon = false; S.dates = [];
+  S.stamps = 0; S.coupon = false; S.dates = []; S.lastStampDate = '';
   save(); buildGrid(); updateUI();
 }
 
@@ -668,7 +816,60 @@ function renderHist() {
 
 function doReset() {
   if (!confirm('カードをリセットしますか？')) return;
-  S = { stamps:0, total:0, coupon:false, hist:[], dates:[] };
+  S = { stamps:0, total:0, coupon:false, hist:[], dates:[], lastStampDate:'' };
+  save(); buildGrid(); updateUI();
+}
+
+// ── STAFF PANEL ──
+const STAFF_PIN = '0422';
+
+function openStaffPanel() {
+  document.getElementById('staffPanel').style.display = 'block';
+  document.getElementById('spPinWrap').style.display = 'block';
+  document.getElementById('spControls').style.display = 'none';
+  document.getElementById('spPinInput').value = '';
+}
+
+function closeStaffPanel() {
+  document.getElementById('staffPanel').style.display = 'none';
+  document.getElementById('spPinInput').value = '';
+}
+
+function checkPin() {
+  const pin = document.getElementById('spPinInput').value;
+  if (pin === STAFF_PIN) {
+    document.getElementById('spPinWrap').style.display = 'none';
+    document.getElementById('spControls').style.display = 'block';
+    document.getElementById('spCount').textContent = S.stamps;
+  } else {
+    alert('PINが違います。');
+    document.getElementById('spPinInput').value = '';
+  }
+}
+
+function staffAdd() {
+  if (S.stamps >= TOTAL) { alert('すでに10スタンプです。'); return; }
+  const today = todayJST();
+  S.dates[S.stamps] = today;
+  S.stamps++; S.total++;
+  S.lastStampDate = today;
+  if (S.stamps >= TOTAL) {
+    S.coupon = true;
+    S.hist.push({ round: Math.ceil(S.total/TOTAL), redeemed:false });
+    setTimeout(celebrate, 320);
+  }
+  document.getElementById('spCount').textContent = S.stamps;
+  save(); buildGrid(); updateUI();
+}
+
+function staffRemove() {
+  if (S.stamps <= 0) { alert('スタンプが0です。'); return; }
+  S.stamps--;
+  S.total = Math.max(0, S.total-1);
+  S.dates.splice(S.stamps, 1);
+  S.coupon = false;
+  S.lastStampDate = S.dates[S.stamps-1] || '';
+  document.getElementById('spCount').textContent = S.stamps;
   save(); buildGrid(); updateUI();
 }
 
