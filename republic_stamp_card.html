@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>REPUBLIC for hair — Loyalty Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F4EFE7;
+    --warm-white: #FAF8F4;
+    --card-bg: #FDFBF8;
+    --charcoal: #1A1A18;
+    --mid: #6A6560;
+    --light: #7A7570;
+    --accent: #B89278;
+    --accent-light: #CEB09A;
+    --gold: #C2A278;
+    --gold-light: #DBC49E;
+    --border: rgba(26,26,24,0.10);
+    --border-strong: rgba(26,26,24,0.18);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    background: var(--cream);
+    min-height: 100vh;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 64px;
+    overflow-x: hidden;
+  }
+
+  /* Grain */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0; opacity:0.7;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    width:100%; max-width:400px;
+    padding: 44px 24px 20px;
+    text-align:center;
+    position:relative; z-index:1;
+  }
+
+  /* SVG Logo */
+  .logo-svg {
+    display:block;
+    margin: 0 auto 12px;
+    width: 180px;
+  }
+
+  .header-rule-v {
+    width:1px; height:24px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    margin: 0 auto 14px;
+  }
+
+  .header-tagline {
+    font-size: 8px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--light);
+    font-weight: 300;
+    text-align: center;
+  }
+
+  .header-divider {
+    display:flex; align-items:center; gap:10px;
+    margin: 16px auto 0; width:200px;
+  }
+  .hd-line { flex:1; height:1px; background:var(--border); }
+  .hd-diamond {
+    width:5px; height:5px;
+    background:var(--accent); transform:rotate(45deg); flex-shrink:0;
+  }
+
+  /* ── CARD ── */
+  .card-wrap {
+    width: calc(100% - 32px);
+    max-width: 390px;
+    margin: 20px auto 0;
+    position:relative; z-index:1;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 26px 24px 22px;
+    position:relative;
+    box-shadow:
+      0 1px 3px rgba(26,26,24,0.04),
+      0 4px 24px rgba(26,26,24,0.07),
+      0 12px 48px rgba(26,26,24,0.04);
+    overflow:hidden;
+  }
+
+  /* Embossed corner marks */
+  .card::before, .card::after {
+    content:'';
+    position:absolute;
+    width:18px; height:18px;
+    border-color: var(--accent-light);
+    border-style:solid;
+  }
+  .card::before { top:10px; left:10px; border-width:1px 0 0 1px; }
+  .card::after  { bottom:10px; right:10px; border-width:0 1px 1px 0; }
+
+  /* Watermark */
+  .card-watermark {
+    position:absolute;
+    right: -4px; bottom: -10px;
+    font-family:'Jost', sans-serif;
+    font-size: 48px;
+    font-weight:200;
+    color: rgba(26,26,24,0.055);
+    line-height:1;
+    pointer-events:none;
+    user-select:none;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+  }
+
+  .card-eyebrow {
+    font-size:8px;
+    letter-spacing:0.48em;
+    text-transform:uppercase;
+    color:var(--accent);
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:300;
+  }
+
+  /* ── STAMP GRID ── */
+  .stamp-grid {
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    gap:10px;
+    margin-bottom:22px;
+  }
+
+  .sc {
+    aspect-ratio:1;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+
+  .sc-ring {
+    position:absolute; inset:1px;
+    border-radius:50%;
+    border:1px solid rgba(26,26,24,0.13);
+    transition: border-color 0.25s ease;
+  }
+
+  .sc-fill {
+    position:absolute; inset:1px;
+    border-radius:50%;
+    background:var(--charcoal);
+    opacity:0;
+    transform:scale(0.35);
+    transition:
+      opacity 0.38s cubic-bezier(0.34,1.56,0.64,1),
+      transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .sc-label {
+    position:relative; z-index:2;
+    font-size:8.5px;
+    color:rgba(26,26,24,0.2);
+    font-weight:300;
+    letter-spacing:0.02em;
+    font-family:'Jost',sans-serif;
+    transition:color 0.25s, opacity 0.25s;
+  }
+
+  /* stamped */
+  .sc.on .sc-fill  { opacity:1; transform:scale(1); }
+  .sc.on .sc-ring  { border-color:transparent; }
+  .sc.on .sc-label { color:#fff; opacity:1; }
+
+  /* 日付表示スタイル */
+  .sc-label { display:flex; flex-direction:column; align-items:center; line-height:1; gap:1px; }
+  .sc-year   { font-size:6px; opacity:0.7; letter-spacing:0; }
+  .sc-month  { font-size:9px; font-weight:300; letter-spacing:-0.01em; }
+  .sc-day    { font-size:11px; font-weight:300; letter-spacing:-0.02em; }
+
+  /* 10th special */
+  .sc:last-child .sc-ring  { border-color:var(--gold); }
+  .sc:last-child .sc-label { color:var(--gold); font-size:12px; }
+  .sc:last-child.on .sc-fill { background:var(--gold); }
+  .sc:last-child.on .sc-label { color:var(--charcoal); font-size:12px; }
+
+  /* ── PROGRESS ── */
+  .prog-row {
+    display:flex; justify-content:space-between;
+    font-size:8px; letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--light); margin-bottom:8px;
+  }
+
+  .prog-track {
+    height:1px; background:var(--border);
+    position:relative; margin-bottom:22px;
+  }
+
+  .prog-fill {
+    position:absolute; left:0; top:0; bottom:0;
+    background:linear-gradient(90deg, var(--accent), var(--gold));
+    transition:width 0.65s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── CARD FOOTER ── */
+  .card-footer {
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+  }
+
+  .cf-left .big { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:300; line-height:1; letter-spacing:-0.02em; }
+  .cf-left .lbl { font-size:7.5px; letter-spacing:0.3em; text-transform:uppercase; color:var(--light); margin-top:4px; }
+
+  .cf-right { text-align:right; }
+  .cf-right .rew { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:300; color:var(--gold); line-height:1; }
+  .cf-right .lbl { font-size:7.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--light); margin-top:4px; }
+
+  /* ── INFO STRIP ── */
+  .info-strip {
+    width: calc(100% - 32px);
+    max-width:390px;
+    margin: 0 auto;
+    position:relative; z-index:1;
+    background:var(--warm-white);
+    border: 1px solid var(--border);
+    border-top:none;
+    border-radius:0 0 3px 3px;
+    padding:14px 20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 16px;
+  }
+
+  .info-item {}
+  .info-item .ii-label {
+    font-size:7px; letter-spacing:0.38em; text-transform:uppercase;
+    color:var(--light); margin-bottom:3px;
+  }
+  .info-item .ii-val {
+    font-size:10px; color:var(--mid); letter-spacing:0.04em; line-height:1.45;
+  }
+  .info-item .ii-val a { color:inherit; text-decoration:none; }
+
+  /* English tag */
+  .en-badge {
+    display:inline-block;
+    font-size:7px; letter-spacing:0.28em;
+    text-transform:uppercase;
+    border:1px solid var(--accent-light);
+    color:var(--accent);
+    padding:2px 7px;
+    border-radius:1px;
+    margin-top:4px;
+  }
+
+  /* Website link */
+  .web-link-wrap { margin-top:8px; }
+
+  .web-link {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    text-decoration:none;
+    background: var(--cream);
+    border:1px solid var(--accent-light);
+    border-radius:2px;
+    padding:5px 10px;
+    transition: background 0.2s;
+  }
+  .web-link:hover { background: var(--accent-light); }
+
+  .web-link-icon { font-size:11px; }
+
+  .web-link-text {
+    font-size:11px;
+    color:var(--accent);
+    letter-spacing:0.03em;
+    font-weight:300;
+  }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    margin-top:20px; text-align:center;
+    position:relative; z-index:1;
+  }
+
+  .btn-stamp {
+    background:var(--charcoal);
+    color:var(--cream);
+    border:none;
+    padding:15px 52px;
+    font-family:'Jost',sans-serif;
+    font-size:8.5px;
+    letter-spacing:0.42em;
+    text-transform:uppercase;
+    font-weight:300;
+    cursor:pointer;
+    border-radius:1px;
+    transition:opacity 0.2s, transform 0.1s;
+  }
+  .btn-stamp:hover   { opacity:0.88; }
+  .btn-stamp:active  { transform:scale(0.97); }
+  .btn-stamp:disabled { opacity:0.3; cursor:default; pointer-events:none; }
+
+  /* ── COUPON ── */
+  .coupon-wrap {
+    width:calc(100% - 32px); max-width:390px;
+    margin:18px auto 0;
+    position:relative; z-index:1;
+    display:none;
+  }
+  .coupon-wrap.show {
+    display:block;
+    animation:slideUp 0.5s cubic-bezier(0.34,1.5,0.64,1) forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .coupon {
+    border:1px dashed var(--gold);
+    border-radius:2px;
+    background:linear-gradient(140deg, #FBF8F3, #F6EFE5);
+    padding:28px 22px 24px;
+    text-align:center;
+    position:relative; overflow:hidden;
+  }
+
+  /* Coupon notches */
+  .coupon::before, .coupon::after {
+    content:'';
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:12px; height:12px;
+    background:var(--cream);
+    border-radius:50%;
+    border:1px solid var(--gold-light);
+  }
+  .coupon::before { left:-7px; }
+  .coupon::after  { right:-7px; }
+
+  .c-scissors { font-size:18px; display:block; margin-bottom:12px; opacity:0.7; }
+  .c-eyebrow  { font-size:8px; letter-spacing:0.45em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+
+  .c-value {
+    font-family:'Cormorant Garamond',serif;
+    font-size:58px; font-weight:300; line-height:1;
+    color:var(--charcoal); letter-spacing:-0.03em;
+    margin-bottom:6px;
+  }
+  .c-value sup { font-size:22px; vertical-align:super; color:var(--gold); }
+
+  .c-body  { font-size:8.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--mid); margin-bottom:20px; line-height:1.9; }
+
+  .btn-redeem {
+    background:var(--gold);
+    border:none; color:#fff;
+    padding:12px 38px;
+    font-family:'Jost',sans-serif;
+    font-size:8px; letter-spacing:0.4em;
+    text-transform:uppercase; font-weight:300;
+    cursor:pointer; border-radius:1px;
+    transition:opacity 0.2s;
+  }
+  .btn-redeem:hover { opacity:0.82; }
+
+  /* ── HISTORY ── */
+  .history-wrap {
+    width:calc(100% - 32px); max-width:390px;
+    margin:28px auto 0;
+    position:relative; z-index:1;
+  }
+
+  .sec-label {
+    font-size:8px; letter-spacing:0.42em;
+    text-transform:uppercase; color:var(--light);
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:2px;
+  }
+
+  .h-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:11px 0;
+    border-bottom:1px solid rgba(26,26,24,0.04);
+    font-size:11px;
+  }
+  .h-round {
+    font-family:'Cormorant Garamond',serif;
+    font-size:13px; color:var(--charcoal);
+  }
+  .h-status {
+    font-size:8px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .h-status.used { color:var(--light); }
+
+  /* ── PAGE FOOTER ── */
+  .page-foot {
+    margin-top:40px; text-align:center;
+    position:relative; z-index:1;
+  }
+
+  .reset-btn {
+    font-size:8px; letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:rgba(26,26,24,0.25);
+    background:none; border:none;
+    cursor:pointer; font-family:'Jost',sans-serif;
+    font-weight:200;
+    transition:color 0.2s;
+  }
+  .reset-btn:hover { color:rgba(26,26,24,0.5); }
+
+  /* ── PARTICLES ── */
+  .particle {
+    position:fixed; pointer-events:none; z-index:9999; border-radius:50%;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <!-- SVG Logo: REPUBLIC ® / for hair -->
+  <svg class="logo-svg" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- REPUBLIC -->
+    <text x="110" y="26"
+      font-family="'Cormorant Garamond', Georgia, serif"
+      font-size="26" font-weight="300"
+      letter-spacing="8"
+      fill="#1A1A18"
+      text-anchor="middle"
+      dominant-baseline="auto">REPUBLIC</text>
+    <!-- registered mark -->
+    <text x="202" y="14"
+      font-family="'Jost', sans-serif"
+      font-size="9" font-weight="300"
+      fill="#B89278"
+      text-anchor="middle">®</text>
+    <!-- divider line -->
+    <line x1="40" y1="35" x2="180" y2="35" stroke="#C2A278" stroke-width="0.6" opacity="0.5"/>
+    <!-- for hair -->
+    <text x="110" y="52"
+      font-family="'Cormorant Garamond', Georgia, serif"
+      font-size="13" font-weight="300"
+      font-style="italic"
+      letter-spacing="5"
+      fill="#B89278"
+      text-anchor="middle">for hair</text>
+  </svg>
+
+  <div class="header-rule-v"></div>
+  <div class="header-tagline">Loyalty Card</div>
+  <div class="header-divider">
+    <div class="hd-line"></div>
+    <div class="hd-diamond"></div>
+    <div class="hd-line"></div>
+  </div>
+</div>
+
+<!-- CARD -->
+<div class="card-wrap">
+  <div class="card">
+    <div class="card-watermark">REPUBLIC</div>
+    <div class="card-eyebrow">Stamp Card</div>
+
+    <div class="stamp-grid" id="stampGrid"></div>
+
+    <div class="prog-row">
+      <span>Progress</span>
+      <span id="progText">0 / 10</span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="progFill" style="width:0%"></div>
+    </div>
+
+    <div class="card-footer">
+      <div class="cf-left">
+        <div class="big" id="visitNum">0</div>
+        <div class="lbl">Total Visits</div>
+      </div>
+      <div class="cf-right">
+        <div class="rew">10% Off</div>
+        <div class="lbl">10回来店ごと</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-item">
+    <div class="ii-label">Hours</div>
+    <div class="ii-val">10:00 – 20:00<br>Closed every other Tue</div>
+    <div class="ii-label" style="margin-top:8px;">Address</div>
+    <div class="ii-val">1F 2-12-10 Minamicho<br>Kichijoji, Tokyo 180-0003</div>
+  </div>
+  <div class="info-item">
+    <div class="ii-label">Tel</div>
+    <div class="ii-val"><a href="tel:0422249195">0422-24-9195</a></div>
+    <div class="en-badge">English OK</div>
+    <div class="web-link-wrap">
+      <a href="https://www.republichair.com" target="_blank" class="web-link">
+        <span class="web-link-icon">🌐</span>
+        <span class="web-link-text">www.republichair.com</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STAMP BUTTON -->
+<div class="btn-wrap">
+  <button class="btn-stamp" id="btnStamp" onclick="addStamp()">Add Visit</button>
+</div>
+
+<!-- COUPON -->
+<div class="coupon-wrap" id="couponWrap">
+  <div class="coupon">
+    <span class="c-scissors">✂</span>
+    <div class="c-eyebrow">Congratulations</div>
+    <div class="c-value"><sup>−</sup>10%</div>
+    <div class="c-body">Next Visit Discount<br>施術合計金額より割引</div>
+    <button class="btn-redeem" onclick="redeemCoupon()">Use Discount</button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="history-wrap" id="histWrap" style="display:none">
+  <div class="sec-label">Visit History</div>
+  <div id="histList"></div>
+</div>
+
+<!-- PAGE FOOTER -->
+<div class="page-foot">
+  <button class="reset-btn" onclick="doReset()">Reset Card</button>
+</div>
+
+<script>
+const TOTAL = 10;
+let S = { stamps:0, total:0, coupon:false, hist:[], dates:[] };
+
+function load() {
+  try { const d = JSON.parse(localStorage.getItem('rfh_card2')||'null'); if(d) S=d; if(!S.dates) S.dates=[]; } catch(e){}
+}
+function save() { localStorage.setItem('rfh_card2', JSON.stringify(S)); }
+
+// JST日付を "26/5/1" 形式で返す
+function todayJST() {
+  const d = new Date(new Date().toLocaleString('en-US', {timeZone:'Asia/Tokyo'}));
+  const yy = String(d.getFullYear()).slice(2);
+  return yy + '/' + (d.getMonth()+1) + '/' + d.getDate();
+}
+
+function buildGrid() {
+  const g = document.getElementById('stampGrid');
+  g.innerHTML = '';
+  for (let i=0; i<TOTAL; i++) {
+    const isOn = i < S.stamps;
+    const c = document.createElement('div');
+    c.className = 'sc' + (isOn ? ' on' : '');
+    c.id = 'sc'+i;
+
+    const ring = document.createElement('div'); ring.className = 'sc-ring';
+    const fill = document.createElement('div'); fill.className = 'sc-fill';
+    const lbl  = document.createElement('div'); lbl.className  = 'sc-label';
+
+    if (isOn && S.dates[i]) {
+      // スタンプ済み：年/月/日表示（3行）
+      const parts = S.dates[i].split('/'); // ["26","5","1"]
+      if (parts.length === 3) {
+        lbl.innerHTML = `<span class="sc-year">'${parts[0]}</span><span class="sc-month">${parts[1]}/${parts[2]}</span>`;
+      } else {
+        // 旧データ（年なし）対応
+        lbl.innerHTML = `<span class="sc-month">${parts[0]}/</span><span class="sc-day">${parts[1]}</span>`;
+      }
+    } else if (i === 9) {
+      lbl.textContent = '★';
+    } else {
+      lbl.textContent = String(i+1).padStart(2,'0');
+    }
+
+    c.appendChild(ring); c.appendChild(fill); c.appendChild(lbl);
+    g.appendChild(c);
+  }
+}
+
+function updateUI() {
+  for (let i=0;i<TOTAL;i++) {
+    const c = document.getElementById('sc'+i);
+    if (!c) continue;
+    c.classList.toggle('on', i < S.stamps);
+  }
+  const pct = (S.stamps/TOTAL)*100;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progText').textContent = S.stamps+' / '+TOTAL;
+  document.getElementById('visitNum').textContent = S.total;
+
+  document.getElementById('btnStamp').disabled = S.coupon;
+
+  const cw = document.getElementById('couponWrap');
+  if (S.coupon) { cw.classList.add('show'); }
+  else          { cw.classList.remove('show'); cw.style.display='none'; }
+
+  renderHist();
+}
+
+function addStamp() {
+  if (S.coupon) return;
+  S.dates[S.stamps] = todayJST(); // 来店日を記録
+  S.stamps++; S.total++;
+
+  buildGrid();
+  // animate new cell
+  const cell = document.getElementById('sc'+(S.stamps-1));
+  if (cell) {
+    cell.classList.remove('on');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>cell.classList.add('on')));
+  }
+
+  if (S.stamps >= TOTAL) {
+    S.coupon = true;
+    S.hist.push({ round: Math.ceil(S.total/TOTAL), redeemed:false });
+    setTimeout(celebrate, 320);
+  }
+  save(); updateUI();
+}
+
+function redeemCoupon() {
+  if (!S.coupon) return;
+  const last = S.hist[S.hist.length-1];
+  if (last) last.redeemed = true;
+  S.stamps = 0; S.coupon = false; S.dates = [];
+  save(); buildGrid(); updateUI();
+}
+
+function renderHist() {
+  const wrap = document.getElementById('histWrap');
+  const list = document.getElementById('histList');
+  if (!S.hist.length) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  list.innerHTML='';
+  [...S.hist].reverse().forEach(h => {
+    const el = document.createElement('div');
+    el.className='h-item';
+    el.innerHTML=`<span class="h-round">Round ${h.round}</span><span class="h-status ${h.redeemed?'used':''}">${h.redeemed?'Redeemed':'Ready'}</span>`;
+    list.appendChild(el);
+  });
+}
+
+function doReset() {
+  if (!confirm('カードをリセットしますか？')) return;
+  S = { stamps:0, total:0, coupon:false, hist:[], dates:[] };
+  save(); buildGrid(); updateUI();
+}
+
+function celebrate() {
+  const cols = ['#C2A278','#B89278','#DBC49E','#1A1A18','#F4EFE7','#CEB09A'];
+  for (let i=0;i<32;i++) {
+    setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className='particle';
+      const sz = 3+Math.random()*4;
+      p.style.cssText=`left:${18+Math.random()*64}vw;top:42vh;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.45?'50%':'1px'};`;
+      document.body.appendChild(p);
+      let t=0, vx=(Math.random()-.5)*6, vy=-(4+Math.random()*7);
+      let x=parseFloat(p.style.left), y=parseFloat(p.style.top);
+      const go=()=>{
+        t+=0.025; x+=vx*.7; y+=vy+t*4.5;
+        p.style.left=x+'px'; p.style.top=y+'px';
+        p.style.opacity=Math.max(0,1-t);
+        if(t<1) requestAnimationFrame(go); else p.remove();
+      };
+      requestAnimationFrame(go);
+    }, i*38);
+  }
+}
+
+load(); buildGrid(); updateUI();
+</script>
+</body>
+</html>
